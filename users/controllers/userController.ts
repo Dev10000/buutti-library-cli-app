@@ -3,7 +3,7 @@ import { isArray } from "util";
 const fs = require('fs');
 const MIN: number = 2;
 const MAX: number = 25;
-const USERS = JSON.parse(fs.readFileSync('../users.json'));
+const USERS = JSON.parse(fs.readFileSync(`${__dirname}/users.json`));
 
 class User {
  private name: string;
@@ -31,8 +31,6 @@ class User {
  }
 
 //  Fetch one user 
-
-
 
  set setFullName(newName: string) {
    const pattern = /^(([a-zA-Z]+\s*)|(([a-zA-Z]+)(\s[a-zA-Z]+)))$/g;
@@ -99,18 +97,18 @@ class User {
  get get_books_history(): string[] {
    return this.books_history;
  }
-
 }
 
-// const user = new User(); 
-// user.setFullName = 'oladapo ';
-// user.set_books = ['My First Book', 'My Second Book'];
-// user.set_books_history = ['First Book'];
-// user.setId = 20;
-// user.setPassword = 'these';
+
+const user = new User(); 
+user.setFullName = 'oladapo ';
+user.set_books = ['My First Book', 'My Second Book'];
+user.set_books_history = ['First Book'];
+user.setId = 20;
+user.setPassword = 'these';
 // // console.log(user.getUser(1));
 
-// console.log(user);
+console.log(user);
 
 
 

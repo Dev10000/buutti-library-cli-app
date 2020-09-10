@@ -4,7 +4,6 @@
   "description": "A typeScript project",
   "main": "script.js",
   "scripts": {
-    "start": "nodemon ",
     "serve": "lite-server",
     "ts-node": "ts-node"
   },

@@ -1,0 +1,94 @@
+[
+  {
+      "isbn": 1,
+      "title": "Ulysses",
+      "author": "James Joyce",
+      "published": "1922-02-02T00:00:00.000Z",
+      "publisher": "Sylvia Beach",
+      "pages": 730,
+      "description": "Ulysses is a modernist novel by Irish writer James Joyce. It was first serialised in parts in the American journal The Little Review from March 1918 to December 1920 and then published in its entirety in Paris by Sylvia Beach on 2 February 1922, Joyce's 40th birthday.",
+      "copies": [
+          {
+              "id": 1,
+              "status": "borrowed",
+              "due": "2020-02-20T00:00:00.000Z",
+              "borrower_id": "12345678"
+          },
+          {
+              "id": 2,
+              "status": "in_library",
+              "due": "2020-02-20T00:00:00.000Z",
+              "borrower_id": "12345678"
+          }
+      ]
+  },
+  {
+      "isbn": 2,
+      "title": "Ulysses",
+      "author": "James Joyce",
+      "published": "1922-02-02T00:00:00.000Z",
+      "publisher": "Sylvia Beach",
+      "pages": 730,
+      "description": "Ulysses is a modernist novel by Irish writer James Joyce. It was first serialised in parts in the American journal The Little Review from March 1918 to December 1920 and then published in its entirety in Paris by Sylvia Beach on 2 February 1922, Joyce's 40th birthday.",
+      "copies": [
+          {
+              "id": 1,
+              "status": "borrowed",
+              "due": "2020-02-20T00:00:00.000Z",
+              "borrower_id": "12345678"
+          },
+          {
+              "id": 2,
+              "status": "in_library",
+              "due": "2020-02-20T00:00:00.000Z",
+              "borrower_id": "12345678"
+          }
+      ]
+  },
+  {
+      "isbn": 3,
+      "title": "Ulysses",
+      "author": "James Joyce",
+      "published": "1922-02-02T00:00:00.000Z",
+      "publisher": "Sylvia Beach",
+      "pages": 730,
+      "description": "Ulysses is a modernist novel by Irish writer James Joyce. It was first serialised in parts in the American journal The Little Review from March 1918 to December 1920 and then published in its entirety in Paris by Sylvia Beach on 2 February 1922, Joyce's 40th birthday.",
+      "copies": [
+          {
+              "id": 1,
+              "status": "borrowed",
+              "due": "2020-02-20T00:00:00.000Z",
+              "borrower_id": "12345678"
+          },
+          {
+              "id": 2,
+              "status": "in_library",
+              "due": "2020-02-20T00:00:00.000Z",
+              "borrower_id": "12345678"
+          }
+      ]
+  },
+  {
+      "isbn": 4,
+      "title": "Ulysses",
+      "author": "James Joyce",
+      "published": "1922-02-02T00:00:00.000Z",
+      "publisher": "Sylvia Beach",
+      "pages": 730,
+      "description": "Ulysses is a modernist novel by Irish writer James Joyce. It was first serialised in parts in the American journal The Little Review from March 1918 to December 1920 and then published in its entirety in Paris by Sylvia Beach on 2 February 1922, Joyce's 40th birthday.",
+      "copies": [
+          {
+              "id": 1,
+              "status": "borrowed",
+              "due": "2020-02-20T00:00:00.000Z",
+              "borrower_id": "12345678"
+          },
+          {
+              "id": 2,
+              "status": "in_library",
+              "due": "2020-02-20T00:00:00.000Z",
+              "borrower_id": "12345678"
+          }
+      ]
+  }
+]

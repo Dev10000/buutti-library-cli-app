@@ -1,3 +1,4 @@
+{
 const fs = require('fs');
 
 class Books {
@@ -17,13 +18,13 @@ class Books {
 		this.saveDB();
   }
 
-	getBookByISBN(isbn: string): Book {
+	getBookByISBN(isbn: string): Book|undefined {
 		const book = this.books.find((book:any) => book.isbn === isbn);
 		return book;
 	}
 	//console.log(getBookByISBN('9781449325862'));
 
-	getBook(author: string, title: string): Book {
+	getBook(author: string, title: string): Book|undefined {
 		const book = this.books.find((book:any) => book.author === author && book.title === title);
 		return book;
 	}
@@ -52,7 +53,7 @@ class Books {
 
 	// returns true if success, false if failure
 	borrowBook(book: Book, borrower_id: number): Boolean {
-		const availableCopy: Copy = book.copies.find((copy: Copy) => copy.status === 'in_library');
+		const availableCopy = book.copies.find((copy: Copy) => copy.status === 'in_library');
 		if (availableCopy === undefined) return false; // no books are available
 		else {
 			availableCopy.borrower_id = borrower_id.toString();
@@ -67,7 +68,7 @@ class Books {
 
 	// returns true if success, false if failure
 	returnBook(book: Book, borrower_id: number): Boolean {
-		const borrowedCopy: Copy = book.copies.find((copy: Copy) => copy.status === 'borrowed' && parseInt(copy.borrower_id) === borrower_id);
+		const borrowedCopy = book.copies.find((copy: Copy) => copy.status === 'borrowed' && parseInt(copy.borrower_id) === borrower_id);
 		if (borrowedCopy === undefined) return false; // the book is not currently borrowed by the borrower
 		else {
 			borrowedCopy.borrower_id = null;
@@ -83,16 +84,16 @@ class Books {
 interface Copy {
 	id: string,
 	status: 'borrowed' | 'in_library' | 'not_available',
-	due_date: Date,
-	borrower_id: string,
+	due_date: any,
+	borrower_id: any,
 }
 
 
 class Book {
 	private isbn: string;
-	private title: string;
+	public title: string;
 	private subtitle: string;
-	private author: string;
+	public author: string;
 	private published: Date;
 	private publisher: string;
 	private pages: number;
@@ -138,3 +139,5 @@ class Book {
 		return `${title}\n${totalBooks}\n${availableBooks}`;
 	}
 } // class Book
+
+} // books.ts

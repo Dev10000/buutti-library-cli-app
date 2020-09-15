@@ -1,17 +1,25 @@
 const fs = require('fs')
 const MIN: number = 2
 const MAX: number = 25
-const USERS = JSON.parse(fs.readFileSync(`${__dirname}/users.json`, 'utf-8'))
-const BOOKS = JSON.parse(fs.readFileSync(`${__dirname}/books.json`, 'utf-8'))
 
-class User {
+type Person =  {
+  name: string;
+  password: string;
+  id: number;
+  books: string[];
+  books_history: string[];
+};
+
+const USERS: Person[] = JSON.parse(fs.readFileSync(`${__dirname}/users.json`, 'utf-8'))
+// const BOOKS = JSON.parse(fs.readFileSync(`${__dirname}/books.json`, 'utf-8'))
+
+
+class User  {
   private name: string
   private password: string
   private id: number
   private books: string[]
   private books_history: string[]
-  private role: string
-  // private books_id: number
 
   constructor () {
     this.name = this.getFullName
@@ -19,33 +27,29 @@ class User {
     this.id = this.getRandomId()
     this.books = this.getBooks
     this.books_history = this.getBooksHistory
-    this.role = this.getRole
   }
 
   // USER CRUD STARTS HERE
 
   // Create one user
 
-  public createUser () {
-    const user = {
-      name: this.getFullName,
-      password: this.getPassword,
-      id: this.getId,
-      books: this.getBooks,
-      books_history: this.getBooksHistory,
-      role: this.getRole
-    }
-    USERS.push(user)
-    fs.writeFile(
-      `${__dirname}/users.json`,
-      JSON.stringify(USERS),
-      'utf-8',
-      err => {
-        if (err) throw err
+  public  createUser () {
+      const user: Person = {
+        name: this.getFullName,
+        password: this.getPassword,
+        id: this.getId,
+        books: this.getBooks,
+        books_history: this.getBooksHistory,
+      };
+       USERS.push(user)
+      fs.writeFile(
+        `${__dirname}/users.json`,
+        JSON.stringify(USERS),
+        'utf-8', (err: any) => {
+          if(err) throw err
+        })
         console.log(`A new user with id: ${user.id} has been added`)
         return User.getAllUsers()
-      }
-    )
   }
 
   // Fetch all users
@@ -62,7 +66,7 @@ class User {
   public static getUser (id: number) {
     if (USERS.length > 0) {
       const user = USERS.filter(el => {
-        return parseInt(el.id) === id
+        return (el.id) === id
       })
       if(user.length > 0) {
         return user
@@ -77,7 +81,7 @@ class User {
   public editUser (id: number) {
     if (USERS.length > 0) {
       USERS.filter(el => {
-        if (parseInt(el.id) === id) {
+        if (el.id === id) {
           const user = {
             name: this.setFullName,
             password: this.setPassword,
@@ -104,7 +108,7 @@ class User {
             `${__dirname}/users.json`,
             JSON.stringify(USERS),
             'utf-8',
-            err => {
+            (err: any) => {
               if (err) throw err
             }
           )
@@ -185,17 +189,6 @@ class User {
     return this.books_history
   }
 
-  set setRole (role: string) {
-    if (role === '') {
-      role = 'subscriber'
-    }
-    this.role = role
-  }
-
-  get getRole () {
-    return this.role
-  }
-
 // Get user strictly by name
 
   public findByName (data: string) {
@@ -211,31 +204,19 @@ class User {
     return 'There are no users'
   }
 
-  // Insert books
-
-  public borrowBooks(id: number, books_id: number[]) {
-    const user = User.getUser(id)
-    const book = BOOKS.filter(el => {
-      return el.isbn === books_id
-    })
-    if(book.length > 0) {
-      return book
-    }
-    throw new Error(`No books with the id: ${books_id}`)
-  }
-
-  public fetchBooks() {
-    if (BOOKS.length < 1) {
-      return 'There are no users available'
-    }
-    return BOOKS
-  }
-
   public getRandomId () {
     return 10 * Date.now()
   }
 
-  
 }
+
+// const user = new User();
+// user.setBooks = ['book']
+// user.setFullName =  'User'
+// user.setPassword = 'Things Fall Apart'
+// user.setBooksHistory = ['Things Fall Apart', 'The Centre Cannot Hold']
+// user.createUser()
+
+// console.log(User.getAllUsers())
 
 

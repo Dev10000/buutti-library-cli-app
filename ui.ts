@@ -16,9 +16,31 @@ The other save options still exist and are listed in the documentation for npm i
 // npm i figlet
 // npm i clear
 
+
+// 1. git init - to make a new repository
+
+// 2. git add.
+
+// 3. git commit -m "Init commit"
+
+
+
+// Use git config --global user.name “my_user”
+// and git config --global user.email “my.email@domain.com”
+// to configure your git
+
+// To actually make changes to the remote repository, you need to use git push
+
+
+
+
+
+
 // if(welcome === 'help') {
 //   console.log(`$ help => Prints this listing.\n$ quit => Quits the program.\n$ search => Opens a dialog for searching for a book in the library system.`)
 // } 
+
+
 
 
 

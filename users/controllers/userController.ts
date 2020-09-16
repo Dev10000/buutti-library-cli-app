@@ -8,9 +8,12 @@ type Person =  {
   id: number;
   books: string[];
   books_history: string[];
+  is_admin: boolean
+  is_logged_in: boolean
 };
 
 const USERS: Person[] = JSON.parse(fs.readFileSync(`${__dirname}/users.json`, 'utf-8'))
+const SESSION = JSON.parse(fs.readFileSync(`${__dirname}/user_session.json`, 'utf-8'))
 // const BOOKS = JSON.parse(fs.readFileSync(`${__dirname}/books.json`, 'utf-8'))
 
 
@@ -20,6 +23,8 @@ class User  {
   private id: number
   private books: string[]
   private books_history: string[]
+  private is_admin: boolean = false
+  private is_logged_in: boolean = false
 
   constructor () {
     this.name = this.getFullName
@@ -27,6 +32,8 @@ class User  {
     this.id = this.getRandomId()
     this.books = this.getBooks
     this.books_history = this.getBooksHistory
+    this.is_admin = this.getIsAdmin
+    this.is_logged_in = this.getIsLoggedIn
   }
 
   // USER CRUD STARTS HERE
@@ -40,6 +47,8 @@ class User  {
         id: this.getId,
         books: this.getBooks,
         books_history: this.getBooksHistory,
+        is_admin: this.getIsAdmin,
+        is_logged_in: this.getIsLoggedIn
       };
        USERS.push(user)
       fs.writeFile(
@@ -68,7 +77,7 @@ class User  {
       const user = USERS.filter(el => {
         return (el.id) === id
       })
-      if(user.length > 0) {
+      if(user.length === 1) {
         return user
       }
       throw new Error(`No user with the id: ${id}`)
@@ -78,27 +87,27 @@ class User  {
 
   // Edit user
 
-  public editUser (id: number) {
-    if (USERS.length > 0) {
-      USERS.filter(el => {
-        if (el.id === id) {
-          const user = {
-            name: this.setFullName,
-            password: this.setPassword,
-            books: this.setBooks,
-            books_history: this.setBooksHistory
-          }
-          // fs.writeFile(`${__dirname}/users.json`, )
-          console.log(user)
-          return user
-        }
-      })
-    }
-  }
+  // public editUser (id: number) {
+  //   if (USERS.length > 0) {
+  //     USERS.filter(el => {
+  //       if (el.id === id) {
+  //         const user = {
+  //           name: this.setFullName,
+  //           password: this.setPassword,
+  //           books: this.setBooks,
+  //           books_history: this.setBooksHistory
+  //         }
+  //         // fs.writeFile(`${__dirname}/users.json`, )
+  //         console.log(user)
+  //         return user
+  //       }
+  //     })
+  //   }
+  // }
 
   // Delete user
 
-  public deleteUser (id: number) {
+  public static deleteUser (id: number) {
     if (USERS.length > 0) {
       const allUser = USERS.filter(el => {
         if (el.id === id) {
@@ -189,6 +198,28 @@ class User  {
     return this.books_history
   }
 
+  set setIsAdmin (data: boolean) {
+    if(data === null) {
+      data = this.is_admin
+    }
+    this.is_admin = data
+  }
+
+  get getIsAdmin () {
+    return this.is_admin
+  }
+
+  set setIsLoggedIn(data: boolean) {
+    if(data === null) {
+      data = this.is_logged_in
+    }
+    this.is_logged_in = data
+  }
+
+  get getIsLoggedIn() {
+    return this.is_logged_in
+  }
+
 // Get user strictly by name
 
   public findByName (data: string) {
@@ -204,6 +235,27 @@ class User  {
     return 'There are no users'
   }
 
+
+  public logUserIn(id: number, password: string) {
+    if(USERS.length > 0) {
+      if(!id) {
+        throw new Error('The id is required')
+      } else if(!password) {
+        throw new Error('The password is required')
+      }
+      const user = USERS.filter(el => {
+        if(el.id === id && el.password === password) {
+          return el.is_logged_in = true
+        }
+      });
+      if(user.length === 1) {
+        return user
+      }
+      throw new Error('No users with the provided details')
+    }
+    return 'There are no users'
+  }
+
   public getRandomId () {
     return 10 * Date.now()
   }
@@ -211,12 +263,18 @@ class User  {
 }
 
 // const user = new User();
-// user.setBooks = ['book']
-// user.setFullName =  'User'
-// user.setPassword = 'Things Fall Apart'
-// user.setBooksHistory = ['Things Fall Apart', 'The Centre Cannot Hold']
+// user.setBooks = ['Climate Change Is Real']
+// user.setFullName =  'Any name'
+// user.setPassword = 'secret'
+// user.setBooksHistory = ['Climate Change Is Real']
+// // user.setIsAdmin = true
 // user.createUser()
 
+// // User.deleteUser(16002474434700)
 // console.log(User.getAllUsers())
+
+// // console.log(User.getUser(16002482214870))
+
+// // console.log(user.logUserIn(16002482214870, 'Things Fall Apart'))
 
 

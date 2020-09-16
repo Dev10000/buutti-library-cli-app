@@ -48,6 +48,15 @@
 			return result;
 		}
 
+		// returns a formatted string containing a list of (searched) books
+		listBooks(books: Book[]): string {
+			let str: string = '';
+			books.forEach((book: Book, index: number) => {
+				str += `Result ${index+1}:\n${book.getTitleAuthorYear()}\nBooks in library: ${book.copies.length}\nAvailable for borrowing: ${book.getAvailableCopies()}\n\n`;
+			});
+			return str;
+		}
+
 		// returns a formatted string with borrowed books by user_id
 		printBorrowedBooks(borrower_id: number): string {
 			let borrowed = `Books you've borrowed:\n`;
@@ -136,7 +145,7 @@
 		}
 
 		// returns a number of available copies of the book
-		private getAvailableCopies(): number {
+		public getAvailableCopies(): number {
 			let available = 0;
 			this.copies.forEach((copy:ICopy) => {
 				if (copy.status === 'in_library')
@@ -203,4 +212,5 @@ const foundBook = books.findBooks('uly')[0];
 console.log(foundBook.printDetails());
 */
 
+module.exports = Books;
 } // books.ts

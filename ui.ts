@@ -19,7 +19,7 @@ The other save options still exist and are listed in the documentation for npm i
 
 // 1. git init - to make a new repository
 
-// 2. git add.
+// 2. git add .
 
 // 3. git commit -m "Init commit"
 

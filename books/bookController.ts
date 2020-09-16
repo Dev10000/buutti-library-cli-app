@@ -1,37 +1,54 @@
 {
 	const fs = require('fs');
 	
+	// a class for all the books in a library
 	class Books {
 		private bookDBfile = 'books.json';
-		private books: Book[];
+		private books: Book[] = [];
 	
+		// reads the bookDBfile and populates books array with book objects
 		constructor() {
-			this.books = [];
 			const bookDB = JSON.parse( fs.readFileSync(`${__dirname}/${this.bookDBfile}`, 'utf8') );
 			bookDB.forEach((book: Book) => {
-				this.books.push(new Book(book));
+				this.books.push(new Book(book)); // makes the book object with functions from the Book class
 			});
 		}
 		
+		// adds a new book into the library and saves the changes
 		add(book: Book) {
 			this.books.push(new Book(book));
 			this.saveDB();
 		}
 	
+		// writes the bookDBfile to disk
 		saveDB() {
 			fs.writeFileSync(this.bookDBfile, JSON.stringify(this.books, null, 2)); // pretty print JSON
 		}
 
+		// returns the book object specified by ISBN
 		getBookByISBN(isbn: string): Book|undefined {
 			const book = this.books.find((book:any) => book.isbn === isbn);
 			return book;
 		}
 	
+		// returns a book object by exact author and title match
 		getBook(author: string, title: string): Book|undefined {
 			const book = this.books.find((book:any) => book.author === author && book.title === title);
 			return book;
 		}
-	
+
+		// returns an array of book objects searched by title or author
+		findBooks(searchString: string): Book[] {
+			const result = this.books.filter((book: Book)=> {
+				const haystack = book.title + book.author;
+				const re = new RegExp(searchString, 'i');
+				const idx = haystack.search(re);
+				if (idx !== -1) return true; // match found, push book to found results
+			});
+			return result;
+		}
+
+		// returns a formatted string with borrowed books by user_id
 		printBorrowedBooks(borrower_id: number): string {
 			let borrowed = `Books you've borrowed:\n`;
 			this.books.forEach((book: Book)=> {
@@ -44,19 +61,8 @@
 			});
 			return borrowed;
 		}
-	
-		// returns books searched by its title or author name
-		findBooks(searchString: string): Book[] {
-			const result = this.books.filter((book: Book)=> {
-				const haystack = book.title + book.author;
-				const re = new RegExp(searchString, 'i');
-				const idx = haystack.search(re);
-				if (idx !== -1) return true; // match found, push book to found results
-			});
-			return result;
-		}
-	
-		// returns true if success, false if failure
+
+		// sets a copy as borrowed. returns true if success, false if failure. saves the db.
 		borrowBook(book: Book, borrower_id: number): Boolean {
 			const availableCopy = book.copies.find((copy: ICopy) => copy.status === 'in_library');
 			if (availableCopy === undefined) return false; // no books are available
@@ -71,8 +77,8 @@
 			this.saveDB();
 			return true;
 		}
-	
-		// returns true if success, false if failure
+
+		// sets a copy as in_library. returns true if success, false if failure. saves the db.
 		returnBook(book: Book, borrower_id: number): Boolean {
 			const borrowedCopy = book.copies.find((copy: ICopy) => copy.status === 'borrowed' && parseInt(copy.borrower_id) === borrower_id);
 			if (borrowedCopy === undefined) return false; // the book is not currently borrowed by the borrower
@@ -86,16 +92,18 @@
 			return true;
 		}
 	} // class Books
-	
-	
+
+
+	// a book object includes an array of copies. this is its typing
 	interface ICopy {
 		id: string,
 		status: 'borrowed' | 'in_library' | 'not_available',
 		due_date: any,
 		borrower_id: any,
 	}
-	
-	
+
+
+	// contains data and functions for a single book
 	class Book {
 		private isbn: string;
 		public title: string;
@@ -107,8 +115,9 @@
 		private description: string;
 		private website: URL;
 		public copies: ICopy[];
-	
-		constructor(book: any) {
+
+		// populate the data variables
+		constructor(book: any) { // needs an interface to get rid of the any?
 			this.isbn = book.isbn;
 			this.title = book.title;
 			this.subtitle = book.subtitle;
@@ -121,10 +130,12 @@
 			this.copies = book.copies;
 		}
 
-		private printDate(dateString: string): string {
+		// formats a dateString to a system locale
+		static printDate(dateString: string): string {
 			return new Date(dateString).toLocaleDateString();
 		}
-	
+
+		// returns a number of available copies of the book
 		private getAvailableCopies(): number {
 			let available = 0;
 			this.copies.forEach((copy:ICopy) => {
@@ -134,7 +145,7 @@
 			return available;
 		}
 
-		// add a new copy of the book to the library
+		// add an new copy of the book to the library
 		addCopy() {
 			const copy: ICopy = {
 				id: (this.copies.length + 1).toString(),
@@ -145,11 +156,13 @@
 			this.copies.push(copy);
 		}
 
+		// returns a formatted string of book title, author and year
 		getTitleAuthorYear(): string {
 			const year = new Date(this.published).getFullYear();
 			return `${this.title} by ${this.author} (${year})`;
 		}
 
+		// returns a formatted string of the book details
 		printDetails(): string {
 			const title = this.getTitleAuthorYear();
 			const totalBooks = `Books in library: ${this.copies.length}`;
@@ -158,8 +171,9 @@
 		}
 	} // class Book
 
-
+/*
 // tests
+// npx ts-node -- bookController.ts
 const books = new Books();
 
 const newBook = new Book({
@@ -180,11 +194,13 @@ const newBook = new Book({
 //books.saveDB();
 
 //console.log(books.getBookByISBN('9781449325862'));
-const foundBook = books.findBooks('java')[1];
+//const foundBook = books.findBooks('java')[1];
 //console.log(books.borrowBook(foundBook, 1234));
 //console.log(books.printBorrowedBooks(1234));
 //console.log(books.returnBook(foundBook, 1234));
 //console.log(books.printBorrowedBooks(1234));
+const foundBook = books.findBooks('uly')[0];
+console.log(foundBook.printDetails());
+*/
 
 } // books.ts
-	

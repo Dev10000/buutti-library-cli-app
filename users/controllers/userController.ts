@@ -1,28 +1,25 @@
+
+
 const fs = require('fs')
 const MIN: number = 2
 const MAX: number = 25
 
-type Person =  {
+type Person = {
   name: string;
   password: string;
   id: number;
   books: string[];
-  books_history: string[];
   is_admin: boolean
   is_logged_in: boolean
 };
 
 const USERS: Person[] = JSON.parse(fs.readFileSync(`${__dirname}/users.json`, 'utf-8'))
-const SESSION = JSON.parse(fs.readFileSync(`${__dirname}/user_session.json`, 'utf-8'))
-// const BOOKS = JSON.parse(fs.readFileSync(`${__dirname}/books.json`, 'utf-8'))
-
 
 class User  {
   private name: string
   private password: string
   private id: number
   private books: string[]
-  private books_history: string[]
   private is_admin: boolean = false
   private is_logged_in: boolean = false
 
@@ -31,7 +28,6 @@ class User  {
     this.password = this.getPassword
     this.id = this.getRandomId()
     this.books = this.getBooks
-    this.books_history = this.getBooksHistory
     this.is_admin = this.getIsAdmin
     this.is_logged_in = this.getIsLoggedIn
   }
@@ -46,7 +42,6 @@ class User  {
         password: this.getPassword,
         id: this.getId,
         books: this.getBooks,
-        books_history: this.getBooksHistory,
         is_admin: this.getIsAdmin,
         is_logged_in: this.getIsLoggedIn
       };
@@ -85,25 +80,8 @@ class User  {
     return 'There are no users'
   }
 
-  // Edit user
+  // Edit user should come  here... not ready yet
 
-  // public editUser (id: number) {
-  //   if (USERS.length > 0) {
-  //     USERS.filter(el => {
-  //       if (el.id === id) {
-  //         const user = {
-  //           name: this.setFullName,
-  //           password: this.setPassword,
-  //           books: this.setBooks,
-  //           books_history: this.setBooksHistory
-  //         }
-  //         // fs.writeFile(`${__dirname}/users.json`, )
-  //         console.log(user)
-  //         return user
-  //       }
-  //     })
-  //   }
-  // }
 
   // Delete user
 
@@ -187,17 +165,6 @@ class User  {
     return this.books
   }
 
-  set setBooksHistory (books_history: string[]) {
-    if (!books_history) {
-      throw new Error('The instance of books must be an array')
-    }
-    this.books_history = books_history
-  }
-
-  get getBooksHistory (): string[] {
-    return this.books_history
-  }
-
   set setIsAdmin (data: boolean) {
     if(data === null) {
       data = this.is_admin
@@ -235,46 +202,35 @@ class User  {
     return 'There are no users'
   }
 
-
-  public logUserIn(id: number, password: string) {
-    if(USERS.length > 0) {
-      if(!id) {
-        throw new Error('The id is required')
-      } else if(!password) {
-        throw new Error('The password is required')
-      }
-      const user = USERS.filter(el => {
-        if(el.id === id && el.password === password) {
-          return el.is_logged_in = true
-        }
-      });
-      if(user.length === 1) {
-        return user
-      }
-      throw new Error('No users with the provided details')
-    }
-    return 'There are no users'
-  }
+  // Login user should come here
 
   public getRandomId () {
     return 10 * Date.now()
   }
 
 }
-
+// // 1.
 // const user = new User();
-// user.setBooks = ['Climate Change Is Real']
-// user.setFullName =  'Any name'
-// user.setPassword = 'secret'
-// user.setBooksHistory = ['Climate Change Is Real']
-// // user.setIsAdmin = true
-// user.createUser()
+// // 2.
+// user.setFullName = 'Oladapo Oladayo'
+// user.setBooks = ['Book 1', 'Book 2']
+// // user.setIsAdmin... if this is not set, is_admin will be false
+// user.setPassword = 'secret' // This has some length validation
+// // user.setIsLoggedIn ... this should be available in the signup method. 
+// // The user id is generated automatically, there is no need to set it
+// // 3. 
+// user.createUser() // This method should be called last when creating a new user
 
-// // User.deleteUser(16002474434700)
-// console.log(User.getAllUsers())
+// // Finally, you can pull all the users like below:
 
-// // console.log(User.getUser(16002482214870))
+// const allUsers = User.getAllUsers() // Please note that this is a static method 
+// console.log(allUsers)  
 
-// // console.log(user.logUserIn(16002482214870, 'Things Fall Apart'))
+
+// // Get one user by Id 
+
+// const oneUser = User.getUser(16003503679040) // Please note that this is a static method
+// console.log(oneUser) // This should display the user with the above id and so on...
+
 
 

@@ -209,6 +209,8 @@ class User  {
   }
 
 }
+module.exports = User;
+
 // // 1.
 // const user = new User();
 // // 2.

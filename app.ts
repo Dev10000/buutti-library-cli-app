@@ -1,3 +1,7 @@
+// use first npm install to install the required modules after cloning
+// start the app with npx ts-node -- app.ts
+
+
 //const readline = require("readline-sync");
 //import * as app1 from "./users/controllers/ui";
 //new (require('./uitest'))();
@@ -27,17 +31,16 @@ class LibraryUI {
         case 'help':
           this.help();
           break;
-        case 'exit':
-        case 'quit':
-          console.log(`Come again soon!\n`);
-          process.exit();
-          break;
         case 'search':
           this.search();
 					break;
+        case 'exit':
+        case 'quit':
+          console.log(`Come again soon!\n`);
+					return; // process.exit()
 			}
 
-			if (this.logged === false) {
+			if (this.logged === false) { // logged out
 				switch (input) {
 					case 'signup':
 						this.signup();
@@ -86,8 +89,8 @@ search\t\tOpens a dialog for searching for a book in the library system.\n`);
   }
 
   helpLoggedOut() {
-    console.log(`signup\tOpens a dialog for creating a new account.
-login\tOpens a dialog for logging into an existing account.\n`);
+    console.log(`signup\t\tOpens a dialog for creating a new account.
+login\t\tOpens a dialog for logging into an existing account.\n`);
   }
 
   helpLoggedIn() {
@@ -151,7 +154,8 @@ logout\t\tLogs out the currently logged in user.\n`);
     }
     return input
   }
-} // class UI
+} // class LibraryUI
+
 
 const books = new (require('./books/bookController'))();
 new LibraryUI();

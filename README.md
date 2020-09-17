@@ -4,8 +4,6 @@
 
 ## TODO
 ```diff
-- F0.2 Help
-- F0.3 Quit
 - F1.1 Signup
 - F1.2 Login
 - F1.3 Logout
@@ -20,6 +18,8 @@
 ## Done
 ```diff
 + F0.1 Welcome message
++ F0.2 Help
++ F0.3 Quit
 + B1.1 Load books.json
 + B1.2 Save books.json
 + B1.3 Get book

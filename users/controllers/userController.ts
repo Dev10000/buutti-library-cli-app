@@ -261,6 +261,7 @@ class User  {
   }
 
 }
+module.exports = User;
 
 // const user = new User();
 // user.setBooks = ['Climate Change Is Real']

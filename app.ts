@@ -1,12 +1,14 @@
 // use first npm install to install the required modules after cloning
 // start the app with npx ts-node -- app.ts
 
-
 //const readline = require("readline-sync");
 //import * as app1 from "./users/controllers/ui";
 //new (require('./uitest'))();
 
 const readline = require('readline-sync');
+
+const user = require('./users/controllers/userController');
+const books = new (require('./books/bookController'))();
 
 class LibraryUI {
 	private logged = false;
@@ -110,7 +112,7 @@ logout\t\tLogs out the currently logged in user.\n`);
   }
 
   search() {
-    console.log(`Search for a book to borrow.`);
+    console.log(`\nSearch for a book to borrow.`);
 		const input: string = this.prompt();
 		const found = books.findBooks(input);
 		if (found.length === 0) console.log(`No books found. Try again, or press enter to quit dialog.`);
@@ -133,15 +135,49 @@ logout\t\tLogs out the currently logged in user.\n`);
 	}
 
 
+	signup() {
+		const newUser = new user();
+		console.log('\nCreating a new user account.');
+
+		while(true) { // check the given name correctness
+			console.log('Insert your name.');
+			try {
+				newUser.setFullName = readline.question('> ');
+				break; // exit the while loop and continue the signup
+			} catch(error) { console.log(error.message) }
+		}
+
+		while (true) { // get the entered passwords to match
+			while (true) { // check the given password correctness
+				console.log('Insert new password.');
+				try {
+					newUser.setPassword = readline.question('> ');
+					break;
+				} catch(error) { console.log(error.message) }
+			}
+
+			console.log('Re-enter your password to ensure it matches the one given above.');
+			const verifyPass = readline.question('> ');
+			if (newUser.getPassword !== verifyPass) console.log('Passwords do not match.');
+			else break;
+		}
+
+		newUser.createUser();
+		console.log(`Passwords match.\nYour account is now created.\nYour account id is ${newUser.getId}.\nStore your account ID in a safe place, preferably in a password manager.\nUse the command 'login' to log in to your account.\n`);
+	}
+
 	// TODO:
-	signup() {}
-  login() {}
+  login() {
+		this.logged = true;
+	}
 	list() {}
 	borrow() {}
 	return() {}
 	change_name() {}
 	remove_account() {}
-	logout() {}
+	logout() {
+		this.logged = false;
+	}
 
 
   askLogin () {
@@ -157,5 +193,4 @@ logout\t\tLogs out the currently logged in user.\n`);
 } // class LibraryUI
 
 
-const books = new (require('./books/bookController'))();
 new LibraryUI();

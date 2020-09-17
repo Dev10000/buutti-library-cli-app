@@ -6,7 +6,9 @@
 ```diff
 - F1.2 Login
 - F1.3 Logout
+- F2.1 List borrowed books
 - F2.2 Borrow book UI
+- F2.3 Return book
 - F1.4 Extra: Change name
 - F1.5 Extra: Remove account
 - B2.X Extra TS: Type guard
@@ -28,6 +30,4 @@
 + B2.1 Load users.json
 + B2.2 Save users.json
 + B2.3 User ID generator
-+ F2.1 List borrowed books
-+ F2.3 Return book
 ```

@@ -60,6 +60,7 @@
 		// returns a formatted string with borrowed books by user_id
 		printBorrowedBooks(borrower_id: number): string {
 			let borrowed = `Books you've borrowed:\n`;
+			const emptyLength = borrowed.length;
 			this.books.forEach((book: Book)=> {
 				book.copies.forEach((copy: ICopy) => {
 					if (parseInt(copy.borrower_id) === borrower_id) {
@@ -68,6 +69,7 @@
 					}
 				});
 			});
+			if (borrowed.length === emptyLength) borrowed += '(No books on loan)';
 			return borrowed;
 		}
 

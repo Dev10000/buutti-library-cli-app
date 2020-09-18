@@ -1,14 +1,14 @@
-
-
 const fs = require('fs')
 const MIN: number = 2
 const MAX: number = 25
 
+
 type Person = {
-  name: string;
-  password: string;
-  id: number;
-  books: string[];
+  name: string
+  password: string
+  id: number
+  books_id: string[]
+  isbn: string[]
   is_admin: boolean
   is_logged_in: boolean
 };
@@ -19,7 +19,8 @@ class User  {
   private name: string
   private password: string
   private id: number
-  private books: string[]
+  private books_id: string[] = ['default']
+  private isbn: string[] = ['default']
   private is_admin: boolean = false
   private is_logged_in: boolean = false
 
@@ -27,7 +28,8 @@ class User  {
     this.name = this.getFullName
     this.password = this.getPassword
     this.id = this.getRandomId()
-    this.books = this.getBooks
+    this.books_id = this.getBooksId
+    this.isbn = this.getBooksIsbn
     this.is_admin = this.getIsAdmin
     this.is_logged_in = this.getIsLoggedIn
   }
@@ -41,7 +43,8 @@ class User  {
         name: this.getFullName,
         password: this.getPassword,
         id: this.getId,
-        books: this.getBooks,
+        books_id: this.getBooksId,
+        isbn: this.getBooksIsbn,
         is_admin: this.getIsAdmin,
         is_logged_in: this.getIsLoggedIn
       };
@@ -52,8 +55,23 @@ class User  {
         'utf-8', (err: any) => {
           if(err) throw err
         })
-        console.log(`A new user with id: ${user.id} has been added`)
         return User.getAllUsers()
+  }
+
+  // Insert books 
+
+  public insertBook(bookIsbn: string, bookId: string, userId: number) {
+    if(bookIsbn && bookId) {
+       return USERS.filter(el => {
+        if(el.id === userId) {
+          el.books_id.push(bookId)
+          el.isbn.push(bookIsbn)
+          fs.writeFile(`${__dirname}/users.json`, JSON.stringify(USERS.splice(USERS.indexOf(el), 1, el)), 'utf-8', (err: any) => {
+            if(err) throw err
+          }) 
+        }
+      })
+    }
   }
 
   // Fetch all users
@@ -70,7 +88,7 @@ class User  {
   public static getUser (id: number) {
     if (USERS.length > 0) {
       const user = USERS.filter(el => {
-        return (el.id) === id
+        return el.id === id
       })
       if(user.length === 1) {
         return user
@@ -79,9 +97,6 @@ class User  {
     }
     return 'There are no users'
   }
-
-  // Edit user should come  here... not ready yet
-
 
   // Delete user
 
@@ -99,7 +114,6 @@ class User  {
               if (err) throw err
             }
           )
-          console.log(`User with id: ${id} has been deleted`)
           return User.getAllUsers()
         }
       })
@@ -153,16 +167,30 @@ class User  {
   get getId (): number {
     return this.id
   }
-
-  set setBooks (books: string[]) {
-    if (!books) {
-      throw new Error('The instance of books must be an array')
+  set setBooksIsbn(isbn: string[]) {
+    if(!isbn) {
+      throw new Error('The isbn number is required')
+    } else if(isbn == null) {
+      isbn = this.isbn
     }
-    this.books = books
+    this.isbn = isbn
   }
 
-  get getBooks () {
-    return this.books
+  get getBooksIsbn() {
+    return this.isbn
+  }
+
+  set setBooksId(id: string[]) {
+    if(!id) {
+      throw new Error(`The book's id is required`)
+    } else if(id == null) {
+      id = this.books_id
+    }
+    this.books_id = id
+  }
+
+  get getBooksId() {
+    return this.books_id
   }
 
   set setIsAdmin (data: boolean) {
@@ -187,52 +215,14 @@ class User  {
     return this.is_logged_in
   }
 
-// Get user strictly by name
-
-  public findByName (data: string) {
-    if(USERS.length > 0) {
-      const user = USERS.filter(el => {
-        return el.name === data.toUpperCase()
-      });
-      if(user.length > 0) {
-        return user
-      }
-      throw new Error(`No users with name ${data}`)
-    }
-    return 'There are no users'
-  }
-
-  // Login user should come here
-
   public getRandomId () {
     return 10 * Date.now()
   }
 
 }
-module.exports = User;
 
-// // 1.
-// const user = new User();
-// // 2.
-// user.setFullName = 'Oladapo Oladayo'
-// user.setBooks = ['Book 1', 'Book 2']
-// // user.setIsAdmin... if this is not set, is_admin will be false
-// user.setPassword = 'secret' // This has some length validation
-// // user.setIsLoggedIn ... this should be available in the signup method. 
-// // The user id is generated automatically, there is no need to set it
-// // 3. 
-// user.createUser() // This method should be called last when creating a new user
+module.exports = User
 
-// // Finally, you can pull all the users like below:
-
-// const allUsers = User.getAllUsers() // Please note that this is a static method 
-// console.log(allUsers)  
-
-
-// // Get one user by Id 
-
-// const oneUser = User.getUser(16003503679040) // Please note that this is a static method
-// console.log(oneUser) // This should display the user with the above id and so on...
 
 
 

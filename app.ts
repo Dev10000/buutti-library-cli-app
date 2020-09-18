@@ -111,24 +111,30 @@ logout\t\tLogs out the currently logged in user.\n`);
     else this.helpLoggedIn();
   }
 
+	
   search() {
-    console.log(`\nSearch for a book to borrow.`);
-		const input: string = this.prompt();
-		const found = books.findBooks(input);
-		if (found.length === 0) console.log(`No books found. Try again, or press enter to quit dialog.`);
-		else {
-			console.log(books.listBooks(found));
-			if (this.logged === true) {
-				console.log(`Choose result by typing its number.`);
+		let found;
+		console.log(`\nSearch for a book to borrow.`);
+
+		while (true) {
+			const input: string = readline.question('search> ').trim();
+			if (input === '') return; // quit search dialog
+			found = books.findBooks(input);
+			if (found.length === 0) console.log(`No books found. Try again, or press enter to quit dialog.`);
+			else break;
+		}
+
+		console.log(books.listBooks(found));
+		if (this.logged === true) {
+			console.log(`Choose result by typing its number.`);
+			const input: string = this.prompt();
+			const selectedBook = found[parseInt(input)-1];
+			if (selectedBook !== undefined) {
+				console.log(`Borrow ${selectedBook.getTitleAuthorYear()}? (y/n)`);
 				const input: string = this.prompt();
-				const selectedBook = found[parseInt(input)-1];
-				if (selectedBook !== undefined) {
-					console.log(`Borrow ${selectedBook.getTitleAuthorYear()}? (y/n)`);
-					const input: string = this.prompt();
-					if (input.trim().toLowerCase() === 'y') {
-						if (books.borrowBook(selectedBook, this.current_user) === true) console.log('Borrowed!');
-						else console.error('Error! Not borrowed.');
-					}
+				if (input.trim().toLowerCase() === 'y') {
+					if (books.borrowBook(selectedBook, this.current_user) === true) console.log('Borrowed!');
+					else console.error('Error! Not borrowed.');
 				}
 			}
 		}
@@ -151,18 +157,22 @@ logout\t\tLogs out the currently logged in user.\n`);
 			while (true) { // check the given password correctness
 				console.log('Insert new password.');
 				try {
-					newUser.setPassword = readline.question('> ');
+					newUser.setPassword = readline.question('> ', { hideEchoBack: true } ); // The typed text on screen is hidden by `*`
 					break;
 				} catch(error) { console.log(error.message) }
 			}
 
 			console.log('Re-enter your password to ensure it matches the one given above.');
-			const verifyPass = readline.question('> ');
-			if (newUser.getPassword !== verifyPass) console.log('Passwords do not match.');
+			const verifyPass = readline.question('> ', { hideEchoBack: true } );
+			if (newUser.getPassword !== verifyPass) {
+				console.log('Passwords do not match.');
+				if (readline.keyInYN('Try again?')) continue;
+				else return; // exit signup function
+			}
 			else break;
 		}
 
-		newUser.createUser();
+		newUser.createUser(); // save to file
 		console.log(`Passwords match.\nYour account is now created.\nYour account id is ${newUser.getId}.\nStore your account ID in a safe place, preferably in a password manager.\nUse the command 'login' to log in to your account.\n`);
 	}
 

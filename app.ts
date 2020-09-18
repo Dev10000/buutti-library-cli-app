@@ -42,7 +42,7 @@ class LibraryUI {
 					break;
         case 'exit':
         case 'quit':
-          console.log(`Come again soon!\n`);
+          console.log(`Thank you for using Green e-library.\nCome again soon!\n`);
 					return; // process.exit()
 			}
 
@@ -214,8 +214,13 @@ logout\t\tLogs out the currently logged in user.\n`);
 	} // login()
 
 
+	// shows the list of books borrowed by the currently logged in user
+	listBorrowed() {
+		console.log( books.printBorrowedBooks(this.loggedUser.id) );
+	}
+
+
 	// TODO:
-	listBorrowed() {}
 	borrowBook() {}
 	returnBook() {}
 	changeName() {}

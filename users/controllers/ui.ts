@@ -1,4 +1,5 @@
 const readLine = require('readline-sync');
+const USER = require('./userController')
 
 class UI {
   constructor() {
@@ -23,4 +24,5 @@ class UI {
   }
 }
 
-module.exports = UI
+const user = new USER
+

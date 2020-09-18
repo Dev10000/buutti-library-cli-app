@@ -3,12 +3,12 @@
 	
 	// a class for all the books in a library
 	class Books {
-		private bookDBfile = 'books.json';
+		private bookDBfile = `${__dirname}/books.json`;
 		private books: Book[] = [];
 	
 		// reads the bookDBfile and populates books array with book objects
 		constructor() {
-			const bookDB = JSON.parse( fs.readFileSync(`${__dirname}/${this.bookDBfile}`, 'utf8') );
+			const bookDB = JSON.parse( fs.readFileSync(this.bookDBfile, 'utf8') );
 			bookDB.forEach((book: Book) => {
 				this.books.push(new Book(book)); // makes the book object with functions from the Book class
 			});

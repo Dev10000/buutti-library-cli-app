@@ -7,13 +7,11 @@
 
 import readline from 'readline-sync';
 
-const user = require('./users/controllers/userController');
+const User = require('./users/controllers/userController');
 const books = new (require('./books/bookController'))();
 
 class LibraryUI {
-	private logged: Boolean = false;
-	private user_id: Number = 1234;
-	private user_name: String = 'Guest';
+	private loggedUser: any = null; // null when no credentials given, use Guest-mode
 
 	constructor() {
     this.greet();
@@ -21,16 +19,18 @@ class LibraryUI {
 	}
 
 
+	// first message
 	greet() {
     console.clear();
-    console.log(`Welcome to Green library!\nGet the list of available commands by typing 'help'.\n`);
+    console.log(`Welcome to Green e-library!\nGet the list of available commands by typing 'help'.\n`);
   }
 
 
 	// main UI loop
 	getInput() {
     while (true) {
-			const inputArray: string[] = readline.question(`${this.user_name}> `).toLowerCase().split(' '); // or readline.promptCL()
+			const loggedName = (this.loggedUser === null) ? 'Guest' : this.loggedUser.name; // should be: this.loggedUser.getFullName?
+			const inputArray: string[] = readline.question(`${loggedName}> `).toLowerCase().split(' '); // or readline.promptCL()
 			const cmd = inputArray.shift(); // remove first array item as a command word
 			const arg: string = inputArray.join(''); // rest of array items as an argument string
       switch (cmd) {
@@ -46,7 +46,7 @@ class LibraryUI {
 					return; // process.exit()
 			}
 
-			if (this.logged === false) { // logged out
+			if (this.loggedUser === null) { // logged out
 				switch (cmd) {
 					case 'signup':
 						this.signup();
@@ -59,19 +59,19 @@ class LibraryUI {
 			} else { // logged in
 				switch (cmd) {
 					case 'list':
-						this.list();
+						this.listBorrowed();
 						break;
 					case 'borrow':
-						this.borrow();
+						this.borrowBook();
 						break;
 					case 'return':
-						this.return();
+						this.returnBook();
 						break;
 					case 'change_name':
-						this.change_name();
+						this.changeName();
 						break;
 					case 'remove_account':
-						this.remove_account();
+						this.removeAccount();
 						break;
 					case 'logout':
 						this.logout();
@@ -82,10 +82,11 @@ class LibraryUI {
   } // getInput()
 
 
+	// help dialog
 	help() {
     console.clear();
     this.helpEverywhere();
-    if (this.logged === false) this.helpLoggedOut();
+    if (this.loggedUser === null) this.helpLoggedOut();
     else this.helpLoggedIn();
   }
 
@@ -110,6 +111,7 @@ remove_account\tOpens a dialog for removing the currently logged in account from
 logout\t\tLogs out the currently logged in user.\n`);
   }
 
+
 	// search book by arg or with dialog
   search(arg: string) {
 		let found;
@@ -130,44 +132,45 @@ logout\t\tLogs out the currently logged in user.\n`);
 		}
 
 		console.log(books.listBooks(found));
-		if (this.logged === true) {
+		if (this.loggedUser !== null) {
 			console.log(`Choose result by typing its number.`);
 			const input: number = readline.questionInt('borrow> '); // or readline.keyInSelect()
 			const selectedBook = found[input-1];
 			if (selectedBook !== undefined) {
 				if (readline.keyInYN(`Borrow ${selectedBook.getTitleAuthorYear()}?`)) {
-					if (books.borrowBook(selectedBook, this.user_id) === true) console.log('Borrowed!');
+					if (books.borrowBook(selectedBook, this.loggedUser.id) === true) console.log('Borrowed!'); // should be: this.loggedUser.getId
 					else console.error('Error! Not borrowed.');
 				}
 				else return; // exit signup function if 'n' is pressed
 			}
 		}
-	}
+	} // search()
 
 
+	// signup dialog
 	signup() {
-		const newUser = new user();
+		const newUser = new User();
 		console.log('\nCreating a new user account.');
 
 		while(true) { // check the given name correctness
 			console.log('Insert your name.');
 			try {
-				newUser.setFullName = readline.question('> ');
+				newUser.setFullName = readline.question('signup> ');
 				break; // exit the while loop and continue the signup
 			} catch(error) { console.log(error.message) }
 		}
 
 		while (true) { // get the entered passwords to match
 			while (true) { // check the given password correctness
-				console.log('Insert new password.');
+				console.log('Insert new password.'); // TODO: or press enter to quit dialog
 				try { // or with readline.questionNewPassword();
-					newUser.setPassword = readline.question('> ', { hideEchoBack: true } ); // The typed text on screen is hidden by `*`
+					newUser.setPassword = readline.question('pass> ', { hideEchoBack: true } ); // The typed text on screen is hidden by `*`
 					break;
 				} catch(error) { console.log(error.message) }
 			}
 
 			console.log('Re-enter your password to ensure it matches the one given above.');
-			const verifyPass = readline.question('> ', { hideEchoBack: true } );
+			const verifyPass = readline.question('pass> ', { hideEchoBack: true } );
 			if (newUser.getPassword !== verifyPass) {
 				console.log('Passwords do not match.');
 				if (readline.keyInYN('Try again?')) continue; // this is required to exit the loop on macOS, as CTRL-C does not work on password prompt (hideEchoBack)
@@ -178,33 +181,49 @@ logout\t\tLogs out the currently logged in user.\n`);
 
 		newUser.createUser(); // save to file
 		console.log(`Passwords match.\nYour account is now created.\nYour account id is ${newUser.getId}.\nStore your account ID in a safe place, preferably in a password manager.\nUse the command 'login' to log in to your account.\n`);
-	}
+	} // signup()
+
+
+	// login dialog
+  login(arg: string) {
+		console.log('Type your account ID to log in.');
+		while (true) {
+			const input: string = readline.question('login> ');
+			if (input === '') return; // quit dialog
+			try {
+				this.loggedUser = User.getUser(parseInt(input)); // I thought this would return an User object, but it just returns the parsed JSON data in an array, so the getters/setters do not work here?!
+				this.loggedUser = this.loggedUser[0]; // workaround to directly access the user data without index, but the getters/setters should work with this
+				//console.log(this.loggedUser.getFullName, this.loggedUser.name); // undefined, name
+				break; // continue to password
+			} catch(error) {
+				console.log('An account with that ID does not exist. Try again, or press enter to quit dialog.');
+			}
+		}
+
+		console.log('Account found! Insert your password.');
+		while (true) {
+			const input: string = readline.question('pass> ', { hideEchoBack: true });
+			if (input === '') return; // quit dialog
+			if (input === this.loggedUser.password) { // should be: this.loggedUser.getPassword?
+				console.log(`Welcome, ${this.loggedUser.name}!`); // should be: this.loggedUser.getFullName?  AND why the username is always saved in upper case?!
+				break;
+			}
+			else console.log('Wrong password. Try again, or press enter to quit dialog.');
+		}
+
+	} // login()
 
 
 	// TODO:
-  login(arg) {
-		this.logged = true;
-	}
-	list() {}
-	borrow() {}
-	return() {}
-	change_name() {}
-	remove_account() {}
+	listBorrowed() {}
+	borrowBook() {}
+	returnBook() {}
+	changeName() {}
+	removeAccount() {}
 	logout() {
-		this.logged = false;
+		this.loggedUser = null;
 	}
 
-
-  askLogin () {
-    console.log(`If you've registered, please login with your id:`);
-    const input: string = readline.prompt();
-    if(input == '0000') {
-      console.log(`Welcome, your id: ${input} is valid`)
-    } else {
-      console.log('Your id is invalid, please try agin')
-    }
-    return input
-  }
 } // class LibraryUI
 
 

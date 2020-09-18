@@ -73,9 +73,9 @@
     "copies": [
       {
         "id": "1",
-        "status": "in_library",
-        "borrower_id": null,
-        "due_date": null
+        "status": "borrowed",
+        "borrower_id": "16004249234200",
+        "due_date": "2020-10-16T10:29:54.896Z"
       }
     ]
   },

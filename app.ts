@@ -5,7 +5,7 @@
 //import * as app1 from "./users/controllers/ui";
 //new (require('./uitest'))();
 
-const readline = require('readline-sync');
+import readline from 'readline-sync';
 
 const user = require('./users/controllers/userController');
 const books = new (require('./books/bookController'))();
@@ -15,20 +15,20 @@ class LibraryUI {
 	private user_id: Number = 1234;
 	private user_name: String = 'Guest';
 
-  constructor() {
+	constructor() {
     this.greet();
     this.getInput();
 	}
 
 
-  greet() {
+	greet() {
     console.clear();
     console.log(`Welcome to Green library!\nGet the list of available commands by typing 'help'.\n`);
   }
 
 
 	// main UI loop
-  getInput() {
+	getInput() {
     while (true) {
 			const inputArray: string[] = readline.question(`${this.user_name}> `).toLowerCase().split(' '); // or readline.promptCL()
 			const cmd = inputArray.shift(); // remove first array item as a command word
@@ -132,8 +132,8 @@ logout\t\tLogs out the currently logged in user.\n`);
 		console.log(books.listBooks(found));
 		if (this.logged === true) {
 			console.log(`Choose result by typing its number.`);
-			const input: string = readline.questionInt('borrow> '); // or readline.keyInSelect()
-			const selectedBook = found[parseInt(input)-1];
+			const input: number = readline.questionInt('borrow> '); // or readline.keyInSelect()
+			const selectedBook = found[input-1];
 			if (selectedBook !== undefined) {
 				if (readline.keyInYN(`Borrow ${selectedBook.getTitleAuthorYear()}?`)) {
 					if (books.borrowBook(selectedBook, this.user_id) === true) console.log('Borrowed!');

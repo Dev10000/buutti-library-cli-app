@@ -219,15 +219,22 @@ logout\t\tLogs out the currently logged in user.\n`);
 		console.log( books.printBorrowedBooks(this.loggedUser.id) );
 	}
 
-	// removeAccount()
-
-	
-
-
 	// TODO:
 	borrowBook() {}
 	returnBook() {}
-	changeName() {}
+
+
+	changeName() {
+		if(this.loggedUser !== null) {
+			const user = new User
+			const id = user.getId
+			const name = user.setFullName
+			return user.changeName(id, name) ? user.changeName() : false
+		}
+	}
+
+
+
 	removeAccount() {}
 	logout() {
 		this.loggedUser = null;

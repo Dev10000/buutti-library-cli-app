@@ -26,3 +26,17 @@ class UI {
 
 const user = new USER
 
+// user.setFullName = "Dayo Oladapo"
+// user.setPassword = "secret"
+// user.setIsAdmin = true
+// user.createUser()
+
+// const usr = USER.deleteUser(16005163472730)
+
+// console.log(USER.getUser())
+
+user.changeName(16005163472730, 'OLADAPO')
+// user.changeName(16005163472730, 'OLADAPO')
+
+console.log(USER.getAllUsers())
+

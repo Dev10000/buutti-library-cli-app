@@ -219,6 +219,10 @@ logout\t\tLogs out the currently logged in user.\n`);
 		console.log( books.printBorrowedBooks(this.loggedUser.id) );
 	}
 
+	// removeAccount()
+
+	
+
 
 	// TODO:
 	borrowBook() {}

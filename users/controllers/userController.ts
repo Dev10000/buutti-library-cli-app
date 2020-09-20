@@ -1,6 +1,7 @@
 const fs = require('fs')
 const MIN: number = 2
 const MAX: number = 25
+const PATTERN = /^((\s*[a-zA-Z]+\s*)|((\s*[a-zA-Z]+)(\s[a-zA-Z]+)))$/g
 
 
 type Person = {
@@ -40,13 +41,12 @@ class User  {
   // SETTERS
 
   set setFullName (newName: string) {
-    const pattern = /^((\s*[a-zA-Z]+\s*)|((\s*[a-zA-Z]+)(\s[a-zA-Z]+)))$/g
     if (newName) {
       if (newName.length < MIN) {
         throw new Error('The name is too short')
       } else if (newName.length > MAX) {
         throw new Error('The name is too long')
-      } else if (!pattern.test(newName)) {
+      } else if (!PATTERN.test(newName)) {
         throw new Error('Invalid name format')
       }
       this.name = newName.trim()
@@ -199,6 +199,9 @@ class User  {
   public changeName(id: number, name: string) {
     const user = USERS.find(el => {
       if(el.id === id) {
+        if(!PATTERN.test(name)) {
+          throw new Error('Invalid name format')
+        }
         const source = {
           name: name
         }

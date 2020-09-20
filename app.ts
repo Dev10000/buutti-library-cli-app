@@ -222,20 +222,8 @@ logout\t\tLogs out the currently logged in user.\n`);
 	// TODO:
 	borrowBook() {}
 	returnBook() {}
-
-
-	changeName() {
-		if(this.loggedUser !== null) {
-			const user = new User
-			const id = user.getId
-			const name = user.setFullName
-			return user.changeName(id, name) ? user.changeName() : false
-		}
-	}
-
-
-
-	removeAccount() {}
+	changeName() {} // Method available in userController
+	removeAccount() {} // Method available in userController
 	logout() {
 		this.loggedUser = null;
 	}

@@ -203,10 +203,10 @@ class User  {
           throw new Error('Invalid name format')
         }
         const source = {
-          name: name
+          name: name.trim()
         }
         const target = {
-          name: el.name.trim(),
+          name: el.name,
           password: el.password,
           id: el.id,
           books_id: el.books_id,

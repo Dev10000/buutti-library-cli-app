@@ -1,5 +1,1 @@
-<<<<<<< HEAD
-[{"name":"OLADAPO OLADAYO","password":"secret","id":16003503679040,"books":["Book 1","Book 2"],"is_admin":false,"is_logged_in":false},{"name":"MICHAEL","password":"secret","id":16004243183610,"books_id":["default","1"],"isbn":["default","12345"],"is_admin":false,"is_logged_in":false},{"name":"ERKKA","password":"pw","id":16004249234200,"is_admin":false,"is_logged_in":false},{"name":"JOHN CHAMPION","password":"111111","id":16004386488540,"books_id":["default"],"isbn":["default"],"is_admin":false,"is_logged_in":false}]
-=======
-[{"name":"OLADAPO","password":"secret","id":16005163472730,"books_id":["default"],"isbn":["default"],"is_admin":true,"is_logged_in":false}]
->>>>>>> ola-dev
+[{"name":"OLADAPO","password":"secret","id":16005163472730,"books_id":["default"],"isbn":["default"],"is_admin":true,"is_logged_in":false},{"name":"Michael Jackson","password":"12345","id":16007797765870,"books_id":["default"],"isbn":["default"],"is_admin":false,"is_logged_in":false},{"name":"John Doe","password":"1993992929395","id":16007798403590,"books_id":["default"],"isbn":["default"],"is_admin":true,"is_logged_in":false}]

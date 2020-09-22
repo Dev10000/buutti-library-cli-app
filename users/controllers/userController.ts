@@ -206,7 +206,7 @@ class User  {
           name: name
         }
         const target = {
-          name: el.name,
+          name: el.name.trim(),
           password: el.password,
           id: el.id,
           books_id: el.books_id,

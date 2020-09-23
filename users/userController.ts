@@ -268,11 +268,3 @@ class User  {
 }
 
 module.exports = User
-
-// const user = new User()
-// // user.setFullName = 'John'
-// // user.setPassword = 'secret'
-// // user.createUser()
-// user.deleteUser()
-// user.changeName(16008607440460, 'Sola')
-// console.log(User.getAllUsers())

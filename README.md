@@ -48,8 +48,8 @@ Note! if some packages are missing try `npm install`
 <h1>Run</h1>
 
 ```
-npx ts-node file.ts  // Local TypeScript
-ts-node file.ts  // Global TypeScript
+npx ts-node app.ts  // Local TypeScript
+ts-node app.ts  // Global TypeScript
 ```
 
 <br>

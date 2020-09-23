@@ -115,7 +115,7 @@ logout\t\tLogs out the currently logged in user.\n`);
   }
 
 
-	// search book by arg or with dialog
+	// search and borrow a book by arg or with dialog
   search(arg: string) {
 		let found;
 
@@ -142,7 +142,7 @@ logout\t\tLogs out the currently logged in user.\n`);
 			if (selectedBook !== undefined) {
 				if (readline.keyInYN(`Borrow ${selectedBook.getTitleAuthorYear()}?`)) {
 					if (books.borrowBook(selectedBook, this.loggedUser.id) === true) console.log('Borrowed!');
-					else console.error('Error! Not borrowed.');
+					else console.error('Error! Book is not available.');
 				}
 				else return; // exit signup function if 'n' is pressed
 			}
@@ -159,14 +159,18 @@ logout\t\tLogs out the currently logged in user.\n`);
 			const book = books.getBookByISBN(input);
 			if (book === undefined) console.log('No books found for that ISBN! Try again, or press enter to quit dialog.');
 			else {
-				console.log(`Found book:\n${ book.printDetails() }\n`);
+				console.log(`\nFound book:\n${ book.printDetails() }\n`);
 				if (book.getAvailableCopies() > 0) {
 					if (readline.keyInYN(`Borrow ${ book.getTitleAuthorYear() }?`)) {
-						if (books.borrowBook(book, this.loggedUser.id) === true) console.log('Borrowed!');
-						else console.error('Error! Not borrowed.');
+						if (books.borrowBook(book, this.loggedUser.id) === true) {
+							console.log('Borrowed!');
+							break; // exit current dialog
+						}
+						else console.error('Error! Book is not available.');
 					}
 					else return; // exit isbn dialog if 'n' is pressed
 				}
+				else console.log('That book is not available! Try again, or press enter to quit dialog.');
 			}
 		}
 	}

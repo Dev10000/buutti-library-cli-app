@@ -57,6 +57,17 @@ ts-node app.ts  // Global TypeScript
 
 <h3>GitLab workflow reminder</h3>
 
+**Clone existing remote repo and start new local dev-branch**
+
+```
+1 git clone https://gitlab.com/swegen/library-cli-group-green.git
+2 cd library-cli-group-green
+3 git branch new-branch-name
+4 git checkout new-branch-name
+5 git push -u origin new-branch-name
+
+```
+
 
 **Commit local repo and push to remote repo**
 ```
@@ -79,3 +90,70 @@ touch .gitignore
 echo "node_modules/" >> .gitignore
 echo ".DS_Store" >> .gitignore
 ```
+
+
+**Start new local master and dev-branch repo and push to remote repo**
+
+```
+1. create new folder
+2. git init - to make a new repository
+3. work your project
+4. git add .
+5. git commit -m "Init commit"
+6. git checkout -b dev-branch-name
+7. git push https://gitlab.com/swegen/library-cli-group-green.git dev-branch-name - This makes new branch in remote repo
+
+```
+
+**Extra Commands**
+
+```
+To view the branches in a Git repository, run the command:
+git branch
+git branch options
+-v or -vv or --verbose
+-a or --all show the local branches as well as any remote branches for a repository.
+-r or --remotes show only the remote branches, use the option.
+
+Rename a Branch
+git branch -m OLD-BRANCH-NAME NEW-BRANCH-NAME
+# Alternative
+git branch --move OLD-BRANCH-NAME NEW-BRANCH-NAME
+
+Delete a Branch
+Git won’t let you delete a branch that you’re currently on. You first need to checkout a different branch, then run the command:
+git branch -d BRANCH-TO-DELETE
+# Alternative:
+git branch --delete BRANCH-TO-DELETE
+
+Compare Branches
+git diff FIRST-BRANCH..SECOND-BRANCH
+
+To update a local branch from remote:
+git stash  --(optional, to save local changes which differs from the remote repository if any) 
+
+Finally pull from the remote branch
+git pull
+
+Track a Remote Branch
+If you already have a branch and you want to track a remote branch, then you use set-upstream-to command:
+git branch --set-upstream-to origin/BRANCH
+
+Or you can use the -u flag (upstream) when you make your first push:
+git push -u origin BRANCH
+
+Help with Git Branch
+
+If you forget how to use an option, or want to explore other functionality around the git branch command, you can run any of these commands:
+
+git help branch
+git branch --help
+man git-branch
+
+
+```
+
+
+
+
+

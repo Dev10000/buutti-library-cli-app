@@ -46,8 +46,9 @@ class LibraryUI {
 					break;
         case 'exit':
         case 'quit':
-          console.log(`Thank you for using ${this.libraryName}.\nCome again soon!\n`);
-					return; // process.exit()
+          //console.log(`Thank you for using ${this.libraryName}.\nCome again soon!\n`);
+					//return; // process.exit()
+					this.quit();
 			}
 
 			if (this.loggedUser === null) { // accept logged out commands

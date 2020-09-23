@@ -154,7 +154,7 @@ class User  {
         is_logged_in: this.getIsLoggedIn
       };
        USERS.push(user)
-      fs.writeFile(
+      fs.writeFileSync(
         `${__dirname}/users.json`,
         JSON.stringify(USERS),
         'utf-8', (err: any) => {
@@ -203,10 +203,10 @@ class User  {
           throw new Error('Invalid name format')
         }
         const source = {
-          name: name
+          name: name.trim()
         }
         const target = {
-          name: el.name.trim(),
+          name: el.name,
           password: el.password,
           id: el.id,
           books_id: el.books_id,
@@ -215,7 +215,7 @@ class User  {
           is_logged_in: el.is_logged_in
         }
         USERS.splice(USERS.indexOf(el), 1, Object.assign(target, source))
-        fs.writeFile(`${__dirname}/users.json`, JSON.stringify(USERS), 'utf-8', (err: any) => {
+        fs.writeFileSync(`${__dirname}/users.json`, JSON.stringify(USERS), 'utf-8', (err: any) => {
           if(err) throw err
         })
       }
@@ -231,7 +231,7 @@ class User  {
         if (el.id === id) {
           const user = USERS.indexOf(el)
           USERS.splice(user, 1)
-          fs.writeFile(
+          fs.writeFileSync(
             `${__dirname}/users.json`,
             JSON.stringify(USERS),
             'utf-8',
@@ -257,7 +257,7 @@ class User  {
         if(el.id === userId) {
           el.books_id.push(bookId)
           el.isbn.push(bookIsbn)
-          fs.writeFile(`${__dirname}/users.json`, JSON.stringify(USERS.splice(USERS.indexOf(el), 1, el)), 'utf-8', (err: any) => {
+          fs.writeFileSync(`${__dirname}/users.json`, JSON.stringify(USERS.splice(USERS.indexOf(el), 1, el)), 'utf-8', (err: any) => {
             if(err) throw err
           }) 
         }
@@ -269,3 +269,10 @@ class User  {
 
 module.exports = User
 
+// const user = new User()
+// // user.setFullName = 'John'
+// // user.setPassword = 'secret'
+// // user.createUser()
+// user.deleteUser()
+// user.changeName(16008607440460, 'Sola')
+// console.log(User.getAllUsers())

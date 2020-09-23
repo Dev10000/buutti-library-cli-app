@@ -3,7 +3,6 @@
 [Link to the assignment](https://gitlab.com/buutcampsprint/typescript2020/exercises-and-examples/-/blob/master/week-2-ts-strings-arrays-objects/exercises/Group%20Assignments%202%20Library%20CLI.md).
 
 
-- [ ] F2.2 Borrow book UI
 - [ ] F2.3 Return book
 - [ ] F1.4 Extra: Change name
 - [ ] F1.5 Extra: Remove account
@@ -26,6 +25,7 @@
 - [x] {+ F1.2 Login +}
 - [x] {+ F1.3 Logout +}
 - [x] {+ F2.1 List borrowed books +}
+- [x] {+ F2.2 Borrow book UI +}
 
 <br>
 

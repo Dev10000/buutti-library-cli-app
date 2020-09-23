@@ -8,7 +8,7 @@
 
 import readline from 'readline-sync';
 
-const User = require('./users/controllers/userController');
+const User = require('./users/userController');
 const books = new (require('./books/bookController'))();
 
 class LibraryUI {

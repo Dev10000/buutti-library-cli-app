@@ -52,7 +52,8 @@
 		listBooks(books: Book[]): string {
 			let str: string = '';
 			books.forEach((book: Book, index: number) => {
-				str += `Result ${index+1}:\n${book.getTitleAuthorYear()}\nBooks in library: ${book.copies.length}\nAvailable for borrowing: ${book.getAvailableCopies()}\n\n`;
+				str += `Result ${index+1}:\n${book.printDetails()}\n\n`; // re-use printDetails() here
+				//str += `Result ${index+1}:\n${book.getTitleAuthorYear()}\nBooks in library: ${book.copies.length}\nAvailable for borrowing: ${book.getAvailableCopies()}\n\n`;
 			});
 			return str;
 		}

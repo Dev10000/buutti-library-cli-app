@@ -1,9 +1,10 @@
-// use first npm install to install the required modules after cloning
-// start the app with npx ts-node -- app.ts
+// Main app of the library project
 
-//const readline = require("readline-sync");
-//import * as app1 from "./users/controllers/ui";
-//new (require('./uitest'))();
+// Instructions:
+// git clone url
+// cd repo
+// npm install
+// npx ts-node -- app.ts
 
 import readline from 'readline-sync';
 
@@ -11,8 +12,11 @@ const User = require('./users/controllers/userController');
 const books = new (require('./books/bookController'))();
 
 class LibraryUI {
-	private loggedUser: any = null; // null when no credentials given, use Guest-mode
+	private libraryName = 'Green e-library';
+	private loggedUser: any = null; // null when no credentials given (logged out Guest-mode)
 
+
+	// shows the library greeting and starts the main UI input loop
 	constructor() {
     this.greet();
     this.getInput();
@@ -22,15 +26,15 @@ class LibraryUI {
 	// first message
 	greet() {
     console.clear();
-    console.log(`Welcome to Green e-library!\nGet the list of available commands by typing 'help'.\n`);
+    console.log(`Welcome to ${this.libraryName}!\nGet the list of available commands by typing 'help'.\n`);
   }
 
 
-	// main UI loop
+	// main UI loop: listens for commands with possible arguments
 	getInput() {
     while (true) {
-			const loggedName = (this.loggedUser === null) ? 'Guest' : this.loggedUser.name; // should be: this.loggedUser.getFullName?
-			const inputArray: string[] = readline.question(`${loggedName}> `).toLowerCase().split(' '); // or readline.promptCL()
+			const loggedName = (this.loggedUser === null) ? 'Guest' : this.loggedUser.name;
+			const inputArray: string[] = readline.question(`${loggedName}> `).toLowerCase().split(/\s+/); // or readline.promptCL()
 			const cmd = inputArray.shift(); // remove first array item as a command word
 			const arg: string = inputArray.join(''); // rest of array items as an argument string
       switch (cmd) {
@@ -42,11 +46,11 @@ class LibraryUI {
 					break;
         case 'exit':
         case 'quit':
-          console.log(`Thank you for using Green e-library.\nCome again soon!\n`);
+          console.log(`Thank you for using ${this.libraryName}.\nCome again soon!\n`);
 					return; // process.exit()
 			}
 
-			if (this.loggedUser === null) { // logged out
+			if (this.loggedUser === null) { // accept logged out commands
 				switch (cmd) {
 					case 'signup':
 						this.signup();
@@ -56,7 +60,7 @@ class LibraryUI {
 						break;
 				}
 
-			} else { // logged in
+			} else { // accept logged in commands
 				switch (cmd) {
 					case 'list':
 						this.listBorrowed();
@@ -84,7 +88,6 @@ class LibraryUI {
 
 	// help dialog
 	help() {
-    console.clear();
     this.helpEverywhere();
     if (this.loggedUser === null) this.helpLoggedOut();
     else this.helpLoggedIn();
@@ -138,7 +141,7 @@ logout\t\tLogs out the currently logged in user.\n`);
 			const selectedBook = found[input-1];
 			if (selectedBook !== undefined) {
 				if (readline.keyInYN(`Borrow ${selectedBook.getTitleAuthorYear()}?`)) {
-					if (books.borrowBook(selectedBook, this.loggedUser.id) === true) console.log('Borrowed!'); // should be: this.loggedUser.getId
+					if (books.borrowBook(selectedBook, this.loggedUser.id) === true) console.log('Borrowed!');
 					else console.error('Error! Not borrowed.');
 				}
 				else return; // exit signup function if 'n' is pressed
@@ -147,65 +150,89 @@ logout\t\tLogs out the currently logged in user.\n`);
 	} // search()
 
 
+	// borrow a book by ISBN
+	borrowBook() {
+		console.log('Give ISBN of the book to borrow.');
+		while (true) {
+			const input: string = readline.question('borrow> ');
+			if (input === '') return; // enter quits the dialog
+			const book = books.getBookByISBN(input);
+			if (book === undefined) console.log('No books found for that ISBN! Try again, or press enter to quit dialog.');
+			else {
+				console.log(`Found book:\n${ book.printDetails() }\n`);
+				if (book.getAvailableCopies() > 0) {
+					if (readline.keyInYN(`Borrow ${ book.getTitleAuthorYear() }?`)) {
+						if (books.borrowBook(book, this.loggedUser.id) === true) console.log('Borrowed!');
+						else console.error('Error! Not borrowed.');
+					}
+					else return; // exit isbn dialog if 'n' is pressed
+				}
+			}
+		}
+	}
+
+
 	// signup dialog
 	signup() {
 		const newUser = new User();
 		console.log('\nCreating a new user account.');
 
-		while(true) { // check the given name correctness
-			console.log('Insert your name.');
+		while (true) {
+			console.log('Insert your name, or press enter to quit dialog.');
+			const input = readline.question('signup> ');
+			if (input === '') return; // enter quits the dialog
 			try {
-				newUser.setFullName = readline.question('signup> ');
+				newUser.setFullName = input; // throws Error if the given name is not good
 				break; // exit the while loop and continue the signup
 			} catch(error) { console.log(error.message) }
 		}
 
 		while (true) { // get the entered passwords to match
 			while (true) { // check the given password correctness
-				console.log('Insert new password.'); // TODO: or press enter to quit dialog
+				console.log('Insert new password, or press enter to quit dialog.'); // TODO: or press enter to quit dialog
+				const input = readline.question('pass> ', { hideEchoBack: true } ); // The typed text on screen is hidden by '*'
+				if (input === '') return; // enter quits the dialog
 				try { // or with readline.questionNewPassword();
-					newUser.setPassword = readline.question('pass> ', { hideEchoBack: true } ); // The typed text on screen is hidden by `*`
+					newUser.setPassword = input;
 					break;
 				} catch(error) { console.log(error.message) }
 			}
 
-			console.log('Re-enter your password to ensure it matches the one given above.');
-			const verifyPass = readline.question('pass> ', { hideEchoBack: true } );
-			if (newUser.getPassword !== verifyPass) {
+			console.log('Re-enter your password to ensure it matches the one given above, or press enter to quit dialog.');
+			const input = readline.question('pass> ', { hideEchoBack: true } );
+			if (input === '') return; // enter quits the dialog
+			if (newUser.getPassword !== input) {
 				console.log('Passwords do not match.');
-				if (readline.keyInYN('Try again?')) continue; // this is required to exit the loop on macOS, as CTRL-C does not work on password prompt (hideEchoBack)
-				else return; // exit signup function
 			}
-			else break;
+			else break; // continue to createUser
 		}
 
-		newUser.createUser(); // save to file
+		newUser.createUser(); // save new user to file
 		console.log(`Passwords match.\nYour account is now created.\nYour account id is ${newUser.getId}.\nStore your account ID in a safe place, preferably in a password manager.\nUse the command 'login' to log in to your account.\n`);
 	} // signup()
 
 
 	// login dialog
   login(arg: string) {
-		console.log('Type your account ID to log in.');
+		console.log('Type your account ID to log in, or press enter to quit dialog.');
 		while (true) {
-			const input: string = readline.question('login> ');
+			const input: string = readline.question('login> '); // or readline.questionInt()
 			if (input === '') return; // quit dialog
 			try {
-				this.loggedUser = User.getUser(parseInt(input)); // I thought this would return an User object, but it just returns the parsed JSON data in an array, so the getters/setters do not work here?!
-				this.loggedUser = this.loggedUser[0]; // workaround to directly access the user data without index, but the getters/setters should work with this
-				//console.log(this.loggedUser.getFullName, this.loggedUser.name); // undefined, name
+				this.loggedUser = User.getUser(parseInt(input)); // returns plain user data object without any methods
 				break; // continue to password
 			} catch(error) {
 				console.log('An account with that ID does not exist. Try again, or press enter to quit dialog.');
 			}
 		}
 
-		console.log('Account found! Insert your password.');
+		console.log('Account found! Insert your password, or press enter to quit dialog.');
 		while (true) {
 			const input: string = readline.question('pass> ', { hideEchoBack: true });
 			if (input === '') return; // quit dialog
-			if (input === this.loggedUser.password) { // should be: this.loggedUser.getPassword?
-				console.log(`Welcome, ${this.loggedUser.name}!`); // should be: this.loggedUser.getFullName?  AND why the username is always saved in upper case?!
+			if (input === this.loggedUser.password) {
+				console.log(`Welcome, ${this.loggedUser.name}!`);
+				this.helpLoggedIn(); // show logged in commands to the user
 				break;
 			}
 			else console.log('Wrong password. Try again, or press enter to quit dialog.');
@@ -219,8 +246,8 @@ logout\t\tLogs out the currently logged in user.\n`);
 		console.log( books.printBorrowedBooks(this.loggedUser.id) );
 	}
 
+
 	// TODO:
-	borrowBook() {}
 	returnBook() {}
 	changeName() {} // Method available in userController
 	removeAccount() {} // Method available in userController

@@ -42,7 +42,8 @@ The other save options still exist and are listed in the documentation for npm i
 
 
 
-
+//const User = require('./users/userController');
+//const books = new (require('./books/bookController'))();
 
 
 
@@ -85,7 +86,7 @@ function greet() {
     }
 }
 
-greet();
+//greet();
 
 
 
@@ -349,11 +350,98 @@ function wait(ms: number){
 
 
 
+ function returnBook() {
+    
+    while (true) {
+        console.clear()
+        console.log("YOU ARE LOGGED IN - RETURN BOOK DIALOGUE");
+        console.log("\nHere’s a list of commands you can use!\n\n" +
+                "help                Prints this listing.\n" +
+                "quit                Quits the program.\n" +
+                "search              Opens a dialog for searching for a book in the library system.\n\n" +
+                "LOGGED IN COMMANDS\n" +
+                "list                Lists the books you are currently borrowing.\n" +
+                "borrow              Opens a dialog for borrowing a book.\n" +
+                "return              Opens a dialog for returning a book.\n" +
+                "change_name         Opens a dialog for changing the name associated with the account.\n" +
+                "remove_account      Opens a dialog for removing the currently logged in account from the library system.\n" +
+                "logout              Logs out the currently logged in user.\n");
+
+        let logged_in: string = readline.question(`\nPlease type a command: `)
+
+        try {
+            // Make sure correct command is typed
+            if (!(logged_in === "help" || logged_in === "quit" || logged_in === "search" || logged_in === "list"
+            || logged_in === "borrow"|| logged_in === "return" || logged_in === "change_name" || logged_in === "remove_account" || logged_in === "logout")) {
+                console.clear();
+                throw "\nCommand not found!";
+            }
+            if (logged_in === "help") {
+                console.clear();
+                console.log("You are already in help menu");
+                wait(2000);
+            }
+            if (logged_in === "quit") {
+                console.clear();
+                quit();
+            }
+            if (logged_in === "search") {
+                console.clear();
+                console.log("GO TO SEARCH FUNCTION");
+                wait(2000);
+            }
+            if (logged_in === "list") {
+                console.clear();
+                console.log("GO TO LIST FUNCTION");
+                wait(2000);
+            }
+            if (logged_in === "borrow") {
+                console.clear();
+                console.log("GO TO BORROW FUNCTION");
+                wait(2000);
+            }
+            if (logged_in === "return") {
+                console.clear();
+                console.log("GO TO RETURN FUNCTION");
+                wait(2000);
+            }
+            if (logged_in === "change_name") {
+                console.clear();
+                console.log("GO TO CHANGE NAME FUNCTION");
+                wait(2000);
+            }
+            if (logged_in === "remove_account") {
+                console.clear();
+                console.log("GO TO REMOVE_ACCOUNT FUNCTION");
+                wait(2000);
+            }
+            if (logged_in === "logout") {
+                console.clear();
+                console.log("GO TO LOGOUT FUNCTION");
+                wait(2000);
+                logout();
+            }
+        }
+        catch(err) {
+            console.clear();
+            console.log(err);
+            wait(2000);            
+        }
+    }    
+}
 
 
 
+// add the code below
+module.exports = { returnBook }
+module.exports = { wait }
 
 
+
+// // shows the list of books borrowed by the currently logged in user
+// listBorrowed() {
+//     console.log( books.printBorrowedBooks(this.loggedUser.id) );
+// }
 
 
 

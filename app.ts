@@ -26,7 +26,7 @@ class LibraryUI {
 	// first message
 	greet() {
     console.clear();
-    console.log(`Welcome to ${this.libraryName}!\nGet the list of available commands by typing 'help'.\n`);
+    console.log(`Welcome to Green e-library!\nGet the list of available commands by typing 'help' or 'login' if you're a member.\n`);
   }
 
 
@@ -217,24 +217,23 @@ logout\t\tLogs out the currently logged in user.\n`);
 		let user; // user object
 		console.log('Type your account ID to log in, or press enter to quit dialog.');
 		while (true) {
-			const input: string = readline.question('login> '); // or readline.questionInt()
-			if (input === '') return; // quit dialog
-				console.log(input);
-				user = User.getUser(parseInt(input)); // returns plain user data object without any methods or a string if failed
-				if (typeof user === 'object') {
-					break; // continue to password
-				}
-				else console.log('An account with that ID does not exist. Try again, or press enter to quit dialog.');
+			const input: number = readline.questionInt('login> ');
+			if (input === null) return; // quit dialog
+			try {
+				this.loggedUser = User.getUser(input); // This return a user object
+				break; // continue to password
+			} catch(error) {
+				console.log('An account with that ID does not exist. Try again, or press enter to quit dialog.');
+			}
 		}
 
 		console.log('Account found! Insert your password, or press enter to quit dialog.');
 		while (true) {
 			const input: string = readline.question('pass> ', { hideEchoBack: true });
 			if (input === '') return; // quit dialog
-			if (input === user.password) {
-				this.loggedUser = user;
-				console.log(`Welcome, ${this.loggedUser.name}!`);
-				this.help(); // show newly available commands to the user
+			if (input === this.loggedUser.password) { 
+				console.log(`Welcome, ${this.loggedUser.name}!`); 
+				this.helpLoggedIn();
 				break;
 			}
 			else console.log('Wrong password. Try again, or press enter to quit dialog.');
@@ -251,8 +250,53 @@ logout\t\tLogs out the currently logged in user.\n`);
 
 	// TODO:
 	returnBook() {}
-	changeName() {} // Method available in userController
-	removeAccount() {} // Method available in userController
+
+	changeName() {
+		// The changeName method provided by the userController accepts 2 args - userId and the new name respectively
+		console.log('Please type your account ID again to change your name.');
+		while (true) {
+			const id: number = readline.questionInt('Id> ');
+			if (id === null) return; // quit dialog
+			try {
+				if(this.loggedUser = User.getUser(+id)) {
+					console.log(this.loggedUser.name + ' ' + this.loggedUser.id);
+					const user = new User();
+					const newName = readline.question('Please type a new name> ');
+					user.changeName(this.loggedUser.id, newName);
+					console.log(`Your new name is ${newName}`);
+					return;
+				}
+			} catch(error) {
+				console.log('An account with that ID does not exist. Try again, or press enter to quit dialog.');
+			}
+		}
+		
+
+	} // Method available in userController
+
+
+
+	removeAccount() {
+		// The changeName method provided by the userController accepts 2 args - userId and the new name respectively
+		console.log('Please type your account ID again to remove your account.');
+		while (true) {
+			const id: number = readline.questionInt('Id> ');
+			if (id === null) return; // quit dialog
+			try {
+				if(this.loggedUser = User.getUser(+id)) {
+					User.deleteUser(this.loggedUser.id)
+					console.log(`User with id: ${this.loggedUser.id} has been removed`);
+					this.loggedUser = null;
+					return this.greet();
+				
+				}
+			} catch(error) {
+				console.log('An account with that ID does not exist. Try again, or press enter to quit dialog.');
+			}
+		}
+		
+	} // Method available in userController
+	
 	logout() {
 		this.loggedUser = null;
 	}

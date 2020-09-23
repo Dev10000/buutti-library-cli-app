@@ -154,7 +154,7 @@ class User  {
         is_logged_in: this.getIsLoggedIn
       };
        USERS.push(user)
-      fs.writeFile(
+      fs.writeFileSync(
         `${__dirname}/users.json`,
         JSON.stringify(USERS),
         'utf-8', (err: any) => {
@@ -215,7 +215,7 @@ class User  {
           is_logged_in: el.is_logged_in
         }
         USERS.splice(USERS.indexOf(el), 1, Object.assign(target, source))
-        fs.writeFile(`${__dirname}/users.json`, JSON.stringify(USERS), 'utf-8', (err: any) => {
+        fs.writeFileSync(`${__dirname}/users.json`, JSON.stringify(USERS), 'utf-8', (err: any) => {
           if(err) throw err
         })
       }
@@ -231,7 +231,7 @@ class User  {
         if (el.id === id) {
           const user = USERS.indexOf(el)
           USERS.splice(user, 1)
-          fs.writeFile(
+          fs.writeFileSync(
             `${__dirname}/users.json`,
             JSON.stringify(USERS),
             'utf-8',
@@ -257,7 +257,7 @@ class User  {
         if(el.id === userId) {
           el.books_id.push(bookId)
           el.isbn.push(bookIsbn)
-          fs.writeFile(`${__dirname}/users.json`, JSON.stringify(USERS.splice(USERS.indexOf(el), 1, el)), 'utf-8', (err: any) => {
+          fs.writeFileSync(`${__dirname}/users.json`, JSON.stringify(USERS.splice(USERS.indexOf(el), 1, el)), 'utf-8', (err: any) => {
             if(err) throw err
           }) 
         }
@@ -268,4 +268,3 @@ class User  {
 }
 
 module.exports = User
-

@@ -214,25 +214,27 @@ logout\t\tLogs out the currently logged in user.\n`);
 
 	// login dialog
   login(arg: string) {
+		let user; // user object
 		console.log('Type your account ID to log in, or press enter to quit dialog.');
 		while (true) {
 			const input: string = readline.question('login> '); // or readline.questionInt()
 			if (input === '') return; // quit dialog
-			try {
-				this.loggedUser = User.getUser(parseInt(input)); // returns plain user data object without any methods
-				break; // continue to password
-			} catch(error) {
-				console.log('An account with that ID does not exist. Try again, or press enter to quit dialog.');
-			}
+				console.log(input);
+				user = User.getUser(parseInt(input)); // returns plain user data object without any methods or a string if failed
+				if (typeof user === 'object') {
+					break; // continue to password
+				}
+				else console.log('An account with that ID does not exist. Try again, or press enter to quit dialog.');
 		}
 
 		console.log('Account found! Insert your password, or press enter to quit dialog.');
 		while (true) {
 			const input: string = readline.question('pass> ', { hideEchoBack: true });
 			if (input === '') return; // quit dialog
-			if (input === this.loggedUser.password) {
+			if (input === user.password) {
+				this.loggedUser = user;
 				console.log(`Welcome, ${this.loggedUser.name}!`);
-				this.helpLoggedIn(); // show logged in commands to the user
+				this.help(); // show newly available commands to the user
 				break;
 			}
 			else console.log('Wrong password. Try again, or press enter to quit dialog.');

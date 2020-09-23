@@ -95,6 +95,7 @@ class LibraryUI {
   }
 
   helpEverywhere() {
+		console.clear();
     console.log(`Here's a list of commands you can use:\n
 help\t\tPrints this listing.
 quit\t\tQuits the program.

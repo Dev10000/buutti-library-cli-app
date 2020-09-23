@@ -1,11 +1,11 @@
 {
 	const fs = require('fs');
-	
+
 	// a class for all the books in a library
 	class Books {
 		private bookDBfile = `${__dirname}/books.json`;
 		private books: Book[] = [];
-	
+
 		// reads the bookDBfile and populates books array with book objects
 		constructor() {
 			const bookDB = JSON.parse( fs.readFileSync(this.bookDBfile, 'utf8') );
@@ -13,13 +13,13 @@
 				this.books.push(new Book(book)); // makes the book object with functions from the Book class
 			});
 		}
-		
+
 		// adds a new book into the library and saves the changes
 		add(book: Book) {
 			this.books.push(new Book(book));
 			this.saveDB();
 		}
-	
+
 		// writes the bookDBfile to disk
 		saveDB() {
 			fs.writeFileSync(this.bookDBfile, JSON.stringify(this.books, null, 2)); // pretty print JSON
@@ -52,12 +52,7 @@
 		listBooks(books: Book[]): string {
 			let str: string = '';
 			books.forEach((book: Book, index: number) => {
-<<<<<<< HEAD
 				str += `Result ${index+1}:\n${book.printDetails()}\n\n`; // re-use printDetails() here
-				//str += `Result ${index+1}:\n${book.getTitleAuthorYear()}\nBooks in library: ${book.copies.length}\nAvailable for borrowing: ${book.getAvailableCopies()}\n\n`;
-=======
-				str += `Result ${index+1}:\n${book.getTitleAuthorYear()}\nBooks in library: ${book.copies.length}\nAvailable for borrowing: ${book.getAvailableCopies()}\n\n`;
->>>>>>> ola-dev
 			});
 			return str;
 		}
@@ -70,7 +65,7 @@
 				book.copies.forEach((copy: ICopy) => {
 					if (parseInt(copy.borrower_id) === borrower_id) {
 						const due_date = new Date(copy.due_date).toLocaleDateString();
-						borrowed += `\n${book.getTitleAuthorYear()}\nDue ${due_date}`;
+						borrowed += `\n${book.getTitleAuthorYear()}\nDue ${due_date}\n`;
 					}
 				});
 			});

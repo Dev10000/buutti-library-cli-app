@@ -54,9 +54,9 @@
     "copies": [
       {
         "id": "1",
-        "status": "in_library",
-        "borrower_id": null,
-        "due_date": null
+        "status": "borrowed",
+        "borrower_id": "1234",
+        "due_date": "2020-10-21T12:23:38.840Z"
       }
     ]
   },
@@ -130,9 +130,9 @@
     "copies": [
       {
         "id": "1",
-        "status": "in_library",
-        "borrower_id": null,
-        "due_date": null
+        "status": "borrowed",
+        "borrower_id": "1234",
+        "due_date": "2020-10-21T12:22:43.387Z"
       }
     ]
   },
@@ -149,9 +149,9 @@
     "copies": [
       {
         "id": "1",
-        "status": "in_library",
-        "borrower_id": null,
-        "due_date": null
+        "status": "borrowed",
+        "borrower_id": "1234",
+        "due_date": "2020-10-21T10:53:24.130Z"
       }
     ]
   },
@@ -168,9 +168,9 @@
     "copies": [
       {
         "id": "1",
-        "status": "in_library",
-        "borrower_id": null,
-        "due_date": null
+        "status": "borrowed",
+        "borrower_id": "1234",
+        "due_date": "2020-10-21T10:49:16.291Z"
       }
     ]
   },

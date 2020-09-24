@@ -54,12 +54,12 @@
 			books.forEach((book: Book, index: number) => {
 				str += `Result ${index+1}:\n${book.printDetails()}\n\n`; // re-use printDetails() here
 			});
-			return str;
+			return str.slice(0, -1); // remove last line break from str
 		}
 
 		// returns a formatted string and an array of book objects with borrowed books by user_id
 		getBorrowedBooks(borrower_id: number): {str:string, books:Book[]} {
-			let borrowedString = `Books you've borrowed:\n`;
+			let borrowedString = `\nBooks you've borrowed:\n`;
 			let borrowedNumber = 0;
 			const borrowedBooks: Book[] = [];
 			this.books.forEach((book: Book) => {
@@ -209,9 +209,7 @@ const newBook = new Book({
 //console.log(books.getBookByISBN('9781449325862'));
 //const foundBook = books.findBooks('java')[1];
 //console.log(books.borrowBook(foundBook, 1234));
-//console.log(books.printBorrowedBooks(1234));
 //console.log(books.returnBook(foundBook, 1234));
-//console.log(books.printBorrowedBooks(1234));
 const foundBook = books.findBooks('uly')[0];
 console.log(foundBook.printDetails());
 */

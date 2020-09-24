@@ -130,9 +130,9 @@
     "copies": [
       {
         "id": "1",
-        "status": "borrowed",
-        "borrower_id": "1234",
-        "due_date": "2020-10-21T12:22:43.387Z"
+        "status": "in_library",
+        "borrower_id": null,
+        "due_date": null
       }
     ]
   },
@@ -168,9 +168,9 @@
     "copies": [
       {
         "id": "1",
-        "status": "borrowed",
-        "borrower_id": "1234",
-        "due_date": "2020-10-21T10:49:16.291Z"
+        "status": "in_library",
+        "borrower_id": null,
+        "due_date": null
       }
     ]
   },

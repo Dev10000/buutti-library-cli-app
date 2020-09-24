@@ -12,21 +12,22 @@ const User = require('./users/userController');
 const books = new (require('./books/bookController'))();
 
 class LibraryUI {
-	private libraryName = 'Green e-library';
+	private libraryName: string;
 	private loggedUser: any = null; // null when no credentials given (logged out Guest-mode)
 
 
-	// shows the library greeting and starts the main UI input loop
-	constructor() {
+	// constructor sets the library name, shows the library greeting and starts the main UI input loop
+	constructor(name: string) {
+		this.libraryName = name;
     this.greet();
     this.getInput();
 	}
 
 
-	// first message
+	// welcome message, according to the assignment
 	greet() {
     console.clear();
-    console.log(`Welcome to Green ${this.libraryName}!\nGet the list of available commands by typing 'help' or 'login' if you have signed up.\n`);
+    console.log(`Welcome to ${this.libraryName}!\nGet the list of available commands by typing 'help'.\n`);
   }
 
 
@@ -46,7 +47,7 @@ class LibraryUI {
 					break;
         case 'exit':
         case 'quit':
-          console.log(`Thank you for using ${this.libraryName}.\nCome again soon!\n`);
+          console.log(`\nThank you for using ${this.libraryName}.\nCome again soon!\n`);
 					return; // process.exit()
 					//this.quit();
 			}
@@ -143,8 +144,8 @@ logout\t\tLogs out the currently logged in user.\n`);
 			const selectedBook = found[parseInt(input)-1];
 			if (selectedBook !== undefined) {
 				if (readline.keyInYN(`Borrow ${selectedBook.getTitleAuthorYear()}?`)) {
-					if (books.borrowBook(selectedBook, this.loggedUser.id) === true) console.log('Borrowed!');
-					else console.error('Error! Book is not available.');
+					if (books.borrowBook(selectedBook, this.loggedUser.id) === true) console.log('Borrowed!\n');
+					else console.error('Error! Book is not available.\n');
 				}
 				else return; // exit signup function if 'n' is pressed
 			}
@@ -165,12 +166,12 @@ logout\t\tLogs out the currently logged in user.\n`);
 				if (book.getAvailableCopies() > 0) {
 					if (readline.keyInYN(`Borrow ${ book.getTitleAuthorYear() }?`)) {
 						if (books.borrowBook(book, this.loggedUser.id) === true) {
-							console.log('Borrowed!');
+							console.log('Borrowed!\n');
 							break; // exit current dialog
 						}
 						else console.error('Error! Book is not available.');
 					}
-					else return; // exit isbn dialog if 'n' is pressed
+					else return; // exit borrow by isbn dialog if 'n' is pressed
 				}
 				else console.log('That book is not available! Try again, or press enter to quit dialog.');
 			}
@@ -239,7 +240,7 @@ logout\t\tLogs out the currently logged in user.\n`);
 			if (input === '') return; // quit dialog
 			if (input === user.password) {
 				this.loggedUser = user;
-				console.log(`Welcome, ${this.loggedUser.name}!`);
+				console.log(`\nWelcome, ${this.loggedUser.name}!`);
 				this.help(); // show newly available commands to the user
 				break;
 			}
@@ -269,7 +270,7 @@ logout\t\tLogs out the currently logged in user.\n`);
 	}
 
 
-	changeNameOla() {
+	changeNameOladapo() {
 		console.log('Please type your account ID again to change your name.');
 		while (true) {
 			const id: number = readline.questionInt('Id> ');
@@ -291,8 +292,37 @@ logout\t\tLogs out the currently logged in user.\n`);
 	}
 
 
-	// removes the current logged in user account if the user has no books borrowed
+	// removes the user account of currently logged in user, but only if the user has no books currently borrowed, according to the assignment
 	removeAccount() {
+		if (readline.keyInYN('Do you want to remove this account from the library system?')) {
+			const borrowedBooks: number = books.getBorrowedBooks(this.loggedUser.id).books.length; // number of currently borrowed books
+			if (borrowedBooks > 0) console.log('Return your books first!');
+			else {
+				console.log('Confirm by giving your password.');
+				while (true) {
+					const input: string = readline.question('pass> ', { hideEchoBack: true });
+					if (input === '') return; // quit dialog
+					if (input === this.loggedUser.password) {
+						if (readline.keyInYN('Are you really really sure???')) {
+							try {
+								User.deleteUser(this.loggedUser.id);
+								console.log('\nRemoved account successfully!');
+								this.logout(); // log the user out of the system
+							} catch (error) {
+								console.error(error.message);
+							}
+							return; // finally exit removeAccount dialog
+						}
+						else return;
+					}
+					else console.log('Wrong password. Try again, or press enter to quit dialog.');
+				}
+			}
+		}
+	}
+
+
+	removeAccountOladapo() {
 		console.log('Please type your account ID again to remove your account.');
 		while (true) {
 			const id: number = readline.questionInt('Id> ');
@@ -322,17 +352,19 @@ logout\t\tLogs out the currently logged in user.\n`);
 	returnBook() {
 		const borrowed = books.getBorrowedBooks(this.loggedUser.id);
 		console.log(borrowed.str);
-		console.log('Choose book to be returned by typing its number.');
-		while (true) {
-			const input: string = readline.question('return> '); // or readline.keyInSelect()
-			if (input === '') return; // enter quits the dialog
-			const selectedBook = borrowed.books[parseInt(input)-1];
-			if (selectedBook !== undefined) {
-				if (books.returnBook(selectedBook, this.loggedUser.id) === true) console.log(`Returned ${selectedBook.getTitleAuthorYear()}.`);
-				else console.error(`Error: failed to return ${selectedBook.getTitleAuthorYear()}!`);
-				return; // exit dialog after successful book return
+		if (borrowed.books.length > 0) {
+			console.log('Choose book to be returned by typing its number.');
+			while (true) {
+				const input: string = readline.question('return> '); // or readline.keyInSelect()
+				if (input === '') return; // enter quits the dialog
+				const selectedBook = borrowed.books[parseInt(input)-1];
+				if (selectedBook !== undefined) {
+					if (books.returnBook(selectedBook, this.loggedUser.id) === true) console.log(`Returned ${selectedBook.getTitleAuthorYear()}.\n`);
+					else console.error(`Error: failed to return ${selectedBook.getTitleAuthorYear()}!`);
+					return; // exit dialog after successful book return
+				}
+				else console.log('Invalid command. Try again or press enter to quit dialog.');
 			}
-			else console.log('Invalid command. Try again or press enter to quit dialog.');
 		}
 	}
 
@@ -477,9 +509,12 @@ logout\t\tLogs out the currently logged in user.\n`);
 
 
 	// logs out currently logged in user
-	logout = () => this.loggedUser = null;
+	logout() {
+		this.loggedUser = null;
+		this.help(); // show changed command set
+	}
 
 } // class LibraryUI
 
 
-new LibraryUI();
+new LibraryUI('Green e-library'); // set library name and display the UI

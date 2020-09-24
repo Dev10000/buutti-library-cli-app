@@ -30,7 +30,7 @@
 			const book = this.books.find((book:any) => book.isbn === isbn);
 			return book;
 		}
-	
+
 		// returns a book object by exact author and title match
 		getBook(author: string, title: string): Book|undefined {
 			const book = this.books.find((book:any) => book.author === author && book.title === title);
@@ -57,20 +57,22 @@
 			return str;
 		}
 
-		// returns a formatted string with borrowed books by user_id
-		printBorrowedBooks(borrower_id: number): string {
-			let borrowed = `Books you've borrowed:\n`;
-			const emptyLength = borrowed.length;
-			this.books.forEach((book: Book)=> {
+		// returns a formatted string and an array of book objects with borrowed books by user_id
+		getBorrowedBooks(borrower_id: number): {str:string, books:Book[]} {
+			let borrowedString = `Books you've borrowed:\n`;
+			let borrowedNumber = 0;
+			const borrowedBooks: Book[] = [];
+			this.books.forEach((book: Book) => {
 				book.copies.forEach((copy: ICopy) => {
 					if (parseInt(copy.borrower_id) === borrower_id) {
 						const due_date = new Date(copy.due_date).toLocaleDateString();
-						borrowed += `\n${book.getTitleAuthorYear()}\nDue ${due_date}\n`;
+						borrowedString += `\n${++borrowedNumber}.\n${book.getTitleAuthorYear()}\nDue ${due_date}\n`;
+						borrowedBooks.push(book);
 					}
 				});
 			});
-			if (borrowed.length === emptyLength) borrowed += '(No books on loan)';
-			return borrowed;
+			if (borrowedNumber === 0) borrowedString += '(No books on loan)\n';
+			return {str:borrowedString, books:borrowedBooks};
 		}
 
 		// sets a copy as borrowed. returns true if success, false if failure. saves the db.
@@ -89,7 +91,7 @@
 			return true;
 		}
 
-		// sets a copy as in_library. returns true if success, false if failure. saves the db.
+		// sets a copy status to 'in_library'. returns true if success, false if failure. saves the db.
 		returnBook(book: Book, borrower_id: number): Boolean {
 			const borrowedCopy = book.copies.find((copy: ICopy) => copy.status === 'borrowed' && parseInt(copy.borrower_id) === borrower_id);
 			if (borrowedCopy === undefined) return false; // the book is not currently borrowed by the borrower

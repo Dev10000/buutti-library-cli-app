@@ -2,14 +2,7 @@
 
 [Link to the assignment](https://gitlab.com/buutcampsprint/typescript2020/exercises-and-examples/-/blob/master/week-2-ts-strings-arrays-objects/exercises/Group%20Assignments%202%20Library%20CLI.md).
 
-
-- [ ] F2.3 Return book
-- [ ] F1.4 Extra: Change name
-- [ ] F1.5 Extra: Remove account
-- [ ] B2.X Extra TS: Type guard
-
-<br>
-
+### Features currently implemented / planned
 - [x] {+ B1.1 Load books.json +}
 - [x] {+ B1.2 Save books.json +}
 - [x] {+ B1.3 Get book +}
@@ -24,11 +17,33 @@
 - [x] {+ F1.1 Signup +}
 - [x] {+ F1.2 Login +}
 - [x] {+ F1.3 Logout +}
+- [x] {+ F1.4 Extra: Change name +}
+- [x] {+ F1.5 Extra: Remove account +}
 - [x] {+ F2.1 List borrowed books +}
 - [x] {+ F2.2 Borrow book UI +}
+- [x] {+ F2.3 Return book +}
+<br>
+
+- [ ] {- B2.X Extra TS: Type guard -}
 
 <br>
 
+# Install
+```
+git clone https://gitlab.com/swegen/library-cli-group-green.git
+cd library-cli-group-green
+npm install
+```
+
+<br>
+
+# Run
+```
+ts-node app.ts  // Globally installed TypeScript
+npx ts-node app.ts  // Locally installed TypeScript
+```
+
+<br>
 <h1>Initialise</h1>
 
 ```
@@ -43,14 +58,6 @@ Shorthand versions: -D is short for --save-dev and -S is short for --save
 ```
 
 Note! if some packages are missing try `npm install`
-
-<br>
-<h1>Run</h1>
-
-```
-npx ts-node app.ts  // Local TypeScript
-ts-node app.ts  // Global TypeScript
-```
 
 <br>
 <h1>Git</h1>

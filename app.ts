@@ -249,7 +249,27 @@ logout\t\tLogs out the currently logged in user.\n`);
 	} // login()
 
 
+	// change the logged user name as per in the assignment
 	changeName() {
+		console.log('Changing the name associated with your account!\nWhich name should we change your name to?');
+		const input: string = readline.question('name> ');
+		if (input === '') return; // quit dialog
+		while (true) {
+			try {
+				const user = new User();
+				user.changeName(this.loggedUser.id, input); // checks name validity, throws error if not valid
+				this.loggedUser.name = input; // update the UI
+				console.log(`We will address you as ${input} from now on.`);
+				return;
+			} catch(error) {
+				console.error(error.message);
+				break;
+			}
+		}
+	}
+
+
+	changeNameOla() {
 		console.log('Please type your account ID again to change your name.');
 		while (true) {
 			const id: number = readline.questionInt('Id> ');
@@ -298,6 +318,7 @@ logout\t\tLogs out the currently logged in user.\n`);
 	}
 
 
+	// return book dialog as per in the assignment
 	returnBook() {
 		const borrowed = books.getBorrowedBooks(this.loggedUser.id);
 		console.log(borrowed.str);

@@ -26,7 +26,7 @@ class LibraryUI {
 	// first message
 	greet() {
     console.clear();
-    console.log(`Welcome to Green e-library!\nGet the list of available commands by typing 'help' or 'login' if you're a member.\n`);
+    console.log(`Welcome to Green ${this.libraryName}!\nGet the list of available commands by typing 'help' or 'login' if you have signed up.\n`);
   }
 
 
@@ -204,7 +204,7 @@ logout\t\tLogs out the currently logged in user.\n`);
 				} catch(error) { console.log(error.message) }
 			}
 
-			console.log('Re-enter your password to ensure it matches the one given above, or press enter to quit dialog.');
+			console.log('Re-enter your password to ensure it matches the one given above.');
 			const input = readline.question('pass> ', { hideEchoBack: true } );
 			if (input === '') return; // enter quits the dialog
 			if (newUser.getPassword !== input) {
@@ -221,25 +221,26 @@ logout\t\tLogs out the currently logged in user.\n`);
 	// login dialog
   login(arg: string) {
 		let user; // user object
-		console.log('Type your account ID to log in, or press enter to quit dialog.');
+		console.log('Type your account ID to log in.');
 		while (true) {
-			const input: number = readline.questionInt('login> ');
-			if (input === null) return; // quit dialog
-			try {
-				this.loggedUser = User.getUser(input); // This return a user object
-				break; // continue to password
-			} catch(error) {
-				console.log('An account with that ID does not exist. Try again, or press enter to quit dialog.');
-			}
+			const input: string = readline.question('login> '); // or readline.questionInt()
+			if (input === '') return; // quit dialog
+				console.log(input);
+				user = User.getUser(parseInt(input)); // returns plain user data object without any methods or a string if failed
+				if (typeof user === 'object') {
+					break; // continue to password
+				}
+				else console.log('An account with that ID does not exist. Try again, or press enter to quit dialog.');
 		}
 
-		console.log('Account found! Insert your password, or press enter to quit dialog.');
+		console.log('Account found! Insert your password.');
 		while (true) {
 			const input: string = readline.question('pass> ', { hideEchoBack: true });
 			if (input === '') return; // quit dialog
-			if (input === this.loggedUser.password) { 
-				console.log(`Welcome, ${this.loggedUser.name}!`); 
-				this.helpLoggedIn();
+			if (input === user.password) {
+				this.loggedUser = user;
+				console.log(`Welcome, ${this.loggedUser.name}!`);
+				this.help(); // show newly available commands to the user
 				break;
 			}
 			else console.log('Wrong password. Try again, or press enter to quit dialog.');
@@ -269,6 +270,7 @@ logout\t\tLogs out the currently logged in user.\n`);
 					const user = new User();
 					const newName = readline.question('Please type a new name> ');
 					user.changeName(this.loggedUser.id, newName);
+					this.loggedUser.name = newName; // update the UI
 					console.log(`Your new name is ${newName}`);
 					return;
 				}

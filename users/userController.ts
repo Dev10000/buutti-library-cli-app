@@ -10,8 +10,6 @@ type Person = {
   id: number
   books_id: string[]
   isbn: string[]
-  is_admin: boolean
-  is_logged_in: boolean
 };
 
 const USERS: Person[] = JSON.parse(fs.readFileSync(`${__dirname}/users.json`, 'utf-8'))
@@ -25,8 +23,6 @@ class User  {
   private id: number
   private books_id: string[] = ['default']
   private isbn: string[] = ['default']
-  private is_admin: boolean = false
-  private is_logged_in: boolean = false
 
   constructor () {
     this.name = this.getFullName
@@ -34,8 +30,6 @@ class User  {
     this.id = this.getRandomId()
     this.books_id = this.getBooksId
     this.isbn = this.getBooksIsbn
-    this.is_admin = this.getIsAdmin
-    this.is_logged_in = this.getIsLoggedIn
   }
 
   // SETTERS
@@ -90,21 +84,6 @@ class User  {
     this.isbn = isbn
   }
 
-  set setIsAdmin (data: boolean) {
-    if(data === null) {
-      data = this.is_admin
-    }
-    this.is_admin = data
-  }
-
-
-  set setIsLoggedIn(data: boolean) {
-    if(data === null) {
-      data = this.is_logged_in
-    }
-    this.is_logged_in = data
-  }
-
   // GETTERS 
 
   get getFullName (): string {
@@ -127,14 +106,6 @@ class User  {
     return this.books_id
   }
 
-  get getIsAdmin () {
-    return this.is_admin
-  }
-
-  get getIsLoggedIn() {
-    return this.is_logged_in
-  }
-
   public getRandomId () {
     return 10 * Date.now()
   }
@@ -149,9 +120,7 @@ class User  {
         password: this.getPassword,
         id: this.getId,
         books_id: this.getBooksId,
-        isbn: this.getBooksIsbn,
-        is_admin: this.getIsAdmin,
-        is_logged_in: this.getIsLoggedIn
+        isbn: this.getBooksIsbn
       };
        USERS.push(user)
       fs.writeFileSync(
@@ -183,9 +152,7 @@ class User  {
             password: el.password,
             id: el.id,
             books_id: el.books_id,
-            isbn: el.isbn,
-            is_admin: el.is_admin,
-            is_logged_in: el.is_logged_in
+            isbn: el.isbn
           }
         }
       })
@@ -210,9 +177,7 @@ class User  {
           password: el.password,
           id: el.id,
           books_id: el.books_id,
-          isbn: el.isbn,
-          is_admin: el.is_admin,
-          is_logged_in: el.is_logged_in
+          isbn: el.isbn
         }
         USERS.splice(USERS.indexOf(el), 1, Object.assign(target, source))
         fs.writeFileSync(`${__dirname}/users.json`, JSON.stringify(USERS), 'utf-8', (err: any) => {
